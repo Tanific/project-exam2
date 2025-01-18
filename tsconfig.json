@@ -1,18 +1,26 @@
 {
     "compilerOptions": {
+      "typeRoots": ["./node_modules/@types", "./src/types"],
+
       "lib": ["es5", "es2015.promise", "dom", "es2015"],
       "target": "ES6",
       "module": "es2015",
       "moduleResolution": "node",
       "outDir": "./build/",
       "rootDir": "./ts",
+      "allowSyntheticDefaultImports": true,
       "strict": true,
       "esModuleInterop": true,
       "composite": true,
       "declaration": true,
       "declarationMap": true,
-      "sourceMap": true
+      "sourceMap": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "skipLibCheck": true
     },
     "include": ["./ts/**/*.ts"],
     "exclude": ["node_modules/"]
+    
+    
   }

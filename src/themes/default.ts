@@ -12,11 +12,15 @@ const defaultTheme = createTheme({
             light: "#F0F0F0",
             dark: "#8C9098",
             hover: "#7A00B3",
-        }
+        },
+        text: {
+            primary: "#FFFFFF",
+        },
     },
     typography: {
         fontFamily: '"Outfit", sans-serif',
     },
+    
 })
 
 export default defaultTheme;
