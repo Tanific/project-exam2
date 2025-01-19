@@ -6,7 +6,9 @@ import defaultTheme from "./themes/default";
 import HomePage from "./pages";
 import LoginPage from "./pages/auth/loginPage";
 import RegisterPage from "./pages/auth/registerPage";
+import VenuesPage from "./pages/venues/allVenuesPage"
 import "./index.css";
+import SingleVenuePage from "./pages/venues/singleVenuePage";
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/venues" element={<VenuesPage />} />
+          <Route path="/venues/:venueId" element={<SingleVenuePage />} />
+
         </Routes>
       </Router>
     </ThemeProvider>

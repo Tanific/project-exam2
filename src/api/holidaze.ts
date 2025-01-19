@@ -10,7 +10,7 @@ import {
   LoginResponse,
 } from "../types/user";
 
-const API_KEY = '3eb358ce-011e-4cc5-89ee-17b4f02b7e39';
+const API_KEY = "3eb358ce-011e-4cc5-89ee-17b4f02b7e39";
 
 export const holidazeApi = createApi({
   reducerPath: "holidazeApi",
@@ -21,9 +21,9 @@ export const holidazeApi = createApi({
       const accessToken = state.user.accessToken;
 
       if (accessToken) {
-        headers.set('Authorization', `Bearer ${accessToken}`);
+        headers.set("Authorization", `Bearer ${accessToken}`);
       }
-      headers.set('X-Noroff-API-Key', API_KEY);
+      headers.set("X-Noroff-API-Key", API_KEY);
       return headers;
     },
   }),
@@ -31,11 +31,18 @@ export const holidazeApi = createApi({
   endpoints: (builder) => ({
     getVenues: builder.query<Venue[], void>({
       query: () => "holidaze/venues?sort=created",
+      transformResponse: (response: { data: Venue[] }) => response.data,
       providesTags: ["VenueList"],
     }),
     getTrendingVenues: builder.query<Venue[], void>({
-      query: () => "holidaze/venues?sort=created&sortOrder=asc&offset=7&limit=3",
+      query: () =>
+        "holidaze/venues?sort=created&sortOrder=asc&offset=7&limit=4",
       transformResponse: (response: { data: Venue[] }) => response.data,
+    }),
+    getVenueById: builder.query<VenueDetailed, string>({
+      query: (id) => `holidaze/venues/${id}?_owner=true&_bookings=true`,
+      transformResponse: (response: { data: VenueDetailed }) => response.data,
+      providesTags: ["Venue"],
     }),
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
@@ -56,4 +63,10 @@ export const holidazeApi = createApi({
   }),
 });
 
-export const { useGetVenuesQuery, useGetTrendingVenuesQuery, useLoginMutation, useRegisterMutation } = holidazeApi;
+export const {
+  useGetVenuesQuery,
+  useGetTrendingVenuesQuery,
+  useLoginMutation,
+  useRegisterMutation,
+  useGetVenueByIdQuery,
+} = holidazeApi;

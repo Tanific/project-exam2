@@ -53,6 +53,24 @@ export interface UpdateVenue {
   };
 }
 
+export interface VenueCardProps {
+  id: string;
+  name: string;
+  media: Media[];
+  price: number;
+  location: VenueLocation;
+  rating: 0 | 1 | 2 | 3 | 4 | 5;
+}
+
+export interface VenueInfoProps {
+  wifi: boolean
+  pets: boolean
+  rating: 0 | 1 | 2 | 3 | 4 | 5
+  breakfast: boolean
+  parking: boolean
+  maxGuests: number
+}
+
 export interface Venue extends CreateVenue {
   id: string;
   created: string;

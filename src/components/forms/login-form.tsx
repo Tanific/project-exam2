@@ -40,7 +40,9 @@ export default function LoginForm(): React.ReactElement {
                 handleLogin();
             }}
         >
-            <Typography variant="h4" component="h1" gutterBottom>
+            <Typography variant="h4" component="h1" gutterBottom sx={{
+                color: "primary.main",
+            }}>
                 Login
             </Typography>
             <TextField

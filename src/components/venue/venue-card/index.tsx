@@ -9,16 +9,8 @@ import {
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { VenueLocation, Media } from "../../../types/venue";
 import VenuePlaceholder from '../../../assets/VenuePlaceholder.svg'
-
-
-interface VenueCardProps {
-  id: string;
-  name: string;
-  media: Media[];
-  price: number;
-  location: VenueLocation;
-  rating: 0 | 1 | 2 | 3 | 4 | 5;
-}
+import { VenueCardProps } from "../../../types/venue";
+import { Link } from "react-router-dom";
 
 export default function VenueCard(props: VenueCardProps): React.ReactElement {
   const { id, name, media, price, location, rating } = props;
@@ -27,6 +19,8 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
   return (
     <Card
       key={id}
+      component={Link}
+      to={`/venues/${id}`}
       sx={{
         maxWidth: 345,
         display: "flex",

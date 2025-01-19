@@ -5,16 +5,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Branding from "./branding";
 import LoginIcon from "@mui/icons-material/Login";
 import { Link } from "react-router-dom";
-import { Typography } from "@mui/material";
 import {
-  Avatar,
   Box,
   Button,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Tooltip,
 } from "@mui/material";
 
 export default function Navigation() {
