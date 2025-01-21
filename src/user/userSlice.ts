@@ -70,7 +70,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { logIn, logOut, updateAvatar, becomeVenueManager } =
+export const { logIn, logout, updateAvatar, becomeVenueManager } =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -13,6 +13,16 @@
 body {
   margin: 0;
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
   font-family: "Outfit", sans-serif;
+  padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
 }

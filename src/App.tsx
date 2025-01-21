@@ -9,6 +9,7 @@ import RegisterPage from "./pages/auth/registerPage";
 import VenuesPage from "./pages/venues/allVenuesPage"
 import "./index.css";
 import SingleVenuePage from "./pages/venues/singleVenuePage";
+import Layout from "./components/layout";
 
 function App() {
   return (
@@ -16,12 +17,13 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/venues" element={<VenuesPage />} />
-          <Route path="/venues/:venueId" element={<SingleVenuePage />} />
-
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route path="venues" element={<VenuesPage />} />
+            <Route path="venues/:venueId" element={<SingleVenuePage />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

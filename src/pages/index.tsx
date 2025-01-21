@@ -1,5 +1,4 @@
 import * as React from "react";
-import Navigation from "../components/layout/header/navigation";
 import { useGetTrendingVenuesQuery } from "../api/holidaze";
 import VenueCard from "../components/venue/venue-card";
 import { Box, Button, Container, Typography } from "@mui/material";
@@ -9,13 +8,13 @@ export default function HomePage(): React.ReactElement {
   const { data, error, isLoading } = useGetTrendingVenuesQuery();
 
   return (
-    <>
-      <Navigation />
       <Container
+        maxWidth="lg"
         sx={{
+          padding: 2,
           backgroundColor: "primary.main",
-          minHeight: "100vh",
           minWidth: "100vw",
+          flex: 1,
         }}
       >
         <Box sx={{ textAlign: "center" }}>
@@ -61,18 +60,11 @@ export default function HomePage(): React.ReactElement {
               justifyContent: "center",
             }}
           >
-            {Array.isArray(data) &&
-              data.map((venue) => (
-                <Box
-                  key={venue.id}
-                  sx={{ flex: "1 1 300px", maxWidth: "345px" }}
-                >
-                  <VenueCard {...venue} />
-                </Box>
-              ))}
+            {data?.map((venue) => (
+              <VenueCard key={venue.id} {...venue} />
+            ))}
           </Box>
         </Box>
       </Container>
-    </>
   );
 }

@@ -6,6 +6,7 @@ import WifiOutlinedIcon from "@mui/icons-material/WifiOutlined";
 import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";
 import LocalParkingOutlinedIcon from "@mui/icons-material/LocalParkingOutlined";
 import BakeryDiningOutlinedIcon from "@mui/icons-material/BakeryDiningOutlined";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 export default function VenueInfo(props: VenueInfoProps): React.ReactElement {
   const { wifi, pets, breakfast, parking, maxGuests, rating } = props;
@@ -18,8 +19,14 @@ export default function VenueInfo(props: VenueInfoProps): React.ReactElement {
       paddingBlock={2}
       marginBlockEnd={1}
     >
-      <Stack spacing={1} direction={"row"} alignItems="center">
-        <Rating size="large" value={rating} readOnly />
+     <Stack spacing={1} direction={"row"} alignItems="center">
+        <Rating
+          size="large"
+          value={rating}
+          readOnly
+          sx={{ color: "secondary.main" }}
+          emptyIcon={<StarBorderIcon style={{ color: "white", fontSize:"inherit" }} />}
+        />
         <Typography>{rating}</Typography>
       </Stack>
       <Stack spacing={3} direction={"row"}>

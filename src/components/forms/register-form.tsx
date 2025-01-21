@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useRegisterMutation } from "../../api/holidaze"; 
-import { Button, TextField, Typography, Box, Link } from "@mui/material";
+import { Button, TextField, Typography, Box } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterForm(): React.ReactElement {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [register, { isLoading, isError }] = useRegisterMutation();
 
   const [name, setName] = React.useState("");
@@ -14,6 +15,8 @@ export default function RegisterForm(): React.ReactElement {
   const handleRegister = async () => {
     try {
       const result = await register({ name, email, password }).unwrap();
+      navigate("/login");
+      console.log(result);
     } catch (error) {
       console.error("Failed to register:", error);
     }
@@ -91,9 +94,9 @@ export default function RegisterForm(): React.ReactElement {
       >
         {isLoading ? "Registering..." : "Register"}
       </Button>
-      <Link href="/login" variant="body2">
+      <Button component={Link} to="/login" sx={{ color: "primary.main" }}>
         Already have an account? Sign in
-      </Link>
+      </Button>
     </Box>
   );
 }

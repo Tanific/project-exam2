@@ -23,13 +23,11 @@ export default function VenuesPage(): React.ReactElement {
 
   console.log("Filtered Data:", filteredData);
   return (
-    <>
-      <Navigation />
       <Container
         sx={{
           backgroundColor: "primary.main",
-          minHeight: "100vh",
           minWidth: "100vw",
+          flex: 1,
         }}
       >
         <Box sx={{ textAlign: "center" }}>
@@ -77,7 +75,7 @@ export default function VenuesPage(): React.ReactElement {
               ))}
           </Box>
           {filteredData && visibleCount < filteredData.length && (
-            <Box sx={{ textAlign: "center", marginTop: 4 }}>
+            <Box sx={{ textAlign: "center", margin: 4 }}>
               <Button variant="contained" onClick={loadMore} sx={{ backgroundColor: "secondary.main" }}>
                 Load More
               </Button>
@@ -85,6 +83,5 @@ export default function VenuesPage(): React.ReactElement {
           )}
         </Box>
       </Container>
-    </>
   );
 }
