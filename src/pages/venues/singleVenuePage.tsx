@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { Link } from "react-router-dom";
 import { useGetVenueByIdQuery } from "../../api/holidaze";
+import { I18nProvider } from "react-aria-components";
 import {
   Box,
   CircularProgress,
@@ -11,88 +12,147 @@ import {
   IconButton,
   Tooltip,
   Typography,
-  Button, 
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VenueInfo from "../../components/venue/venue-info";
+import VenueGallery from "../../components/venue/venue-gallery";
+import BookingCalendar from "../../components/venue/booking-calendar";
 
 export default function SingleVenuePage(): React.ReactElement {
   const { venueId } = useParams();
-  console.log("Venue ID:", venueId); // Debugging venueId
-
-  const { data, error, isLoading } = useGetVenueByIdQuery(venueId ?? "");
-  console.log("API Response:", { data, error, isLoading }); // Debugging API response
-
+  const { data, error, isError, isLoading } = useGetVenueByIdQuery(
+    venueId ?? ""
+  );
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userName = useSelector((state: RootState) => state.user.user.name);
   const isOwnVenue = userName === data?.owner.name;
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "primary.main" }}>  
-        <CircularProgress color="inherit"/>
-      </Box>
-    );
-  }
+  console.log(data);
 
-  if (error) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "primary.main" }}>
-        <Typography variant="h6" color="error">
-          An error occurred while fetching the venue data.
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (!data) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "primary.main" }}>
-        <Typography variant="h6" color="error">
-          No data available for this venue.
-        </Typography>
-      </Box>
-    );
-  }
+  if (error != null) console.error(error);
 
   return (
-      <Container
-        sx={{
-          backgroundColor: "primary.main",
-          minWidth: "100vw",
-          color: "white",
-          padding: 2,
-          flex: 1,
-        }}
-      >
-        <Box sx={{ marginTop: 2 }}>
-          <Button variant="outlined" component={Link} to="/venues" sx={{ borderColor: "secondary.main", color: "secondary.light" }}> 
-            Back to all venues
-          </Button>
+    <>
+      {isError ? (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "primary.main",
+            color: "white",
+          }}
+        >
+          <p>Oh no, there was an error</p>
         </Box>
-        <Box component="hgroup" sx={{ marginBlock: 2 }}>
-          <Typography component="h1" variant="h2">
-            {data.name}
-            {isOwnVenue && (
-              <Tooltip title="Edit venue">
-                <IconButton
-                  aria-label="edit venue"
-                  href={`/venues/edit/${data.id}/`}
+      ) : isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "primary.main",
+            color: "white",
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </Box>
+      ) : data != null ? (
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            backgroundColor: "primary.main",
+            minWidth: "100vw",
+            flex: 1,
+          }}
+        >
+          <Box
+            sx={{
+              alignItems: "center",
+              maxWidth: "md",
+              color: "white",
+              padding: 2,
+            }}
+          >
+            <Box
+              sx={{
+                marginTop: 2,
+                paddingX: 2,
+              }}
+            >
+              <Button
+                variant="outlined"
+                component={Link}
+                to="/venues"
+                sx={{ borderColor: "secondary.main", color: "secondary.light" }}
+              >
+                Back to all venues
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                padding: 2,
+                borderRadius: 1,
+                marginTop: 2,
+                textAlign: "center",
+              }}
+            >
+              <Box sx={{ marginBlock: 1 }}>
+                <Typography
+                  component="h1"
+                  variant="h2"
+                  sx={{
+                    fontSize: {
+                      xs: "2rem",
+                      sm: "2.4rem",
+                      md: "2.8rem",
+                      lg: "3.5rem",
+                    },
+                  }}
                 >
-                  <EditIcon color="primary" />
-                </IconButton>
-              </Tooltip>
-            )}
-          </Typography>
-          <VenueInfo
-            wifi={data.meta.wifi}
-            pets={data.meta.pets}
-            rating={data.rating}
-            breakfast={data.meta.breakfast}
-            parking={data.meta.parking}
-            maxGuests={data.maxGuests}
-          />
-        </Box>
-      </Container>
+                  {data.name}
+                  {isOwnVenue && (
+                    <Tooltip title="Edit venue">
+                      <IconButton
+                        aria-label="edit venue"
+                        href={`/venues/edit/${data.id}/`}
+                      >
+                        <EditIcon color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Typography>
+              </Box>
+              <VenueInfo
+                wifi={data.meta.wifi}
+                pets={data.meta.pets}
+                rating={data.rating}
+                breakfast={data.meta.breakfast}
+                parking={data.meta.parking}
+                maxGuests={data.maxGuests}
+              />
+
+              <VenueGallery images={data.media} />
+
+            </Box>
+          <Box component="section" sx={{ padding: 2, marginBlock: 2 }}>
+            <I18nProvider locale="en-NO">
+              <BookingCalendar
+                bookings={data.bookings}
+                maxGuests={data.maxGuests}
+                venueId={data.id}
+                enableBooking={isLoggedIn}
+              />
+            </I18nProvider>
+          </Box>
+          </Box>
+        </Container>
+      ) : null}
+    </>
   );
 }

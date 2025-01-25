@@ -12,6 +12,13 @@ interface BookingBase {
     guests: number
 }
 
+export interface BookingCalendarProps {
+  bookings: Booking[]
+  maxGuests: number
+  venueId: string
+  enableBooking?: boolean
+}
+
 export interface CreateBooking extends BookingBase {
     venueId: string
 }

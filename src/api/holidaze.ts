@@ -9,6 +9,7 @@ import {
   RegisterUserObject,
   LoginResponse,
 } from "../types/user";
+import { BookingDetailed, BookingWithVenue, CreateBooking, UpdateBooking } from "../types/booking";
 
 const API_KEY = "3eb358ce-011e-4cc5-89ee-17b4f02b7e39";
 
@@ -44,20 +45,50 @@ export const holidazeApi = createApi({
       transformResponse: (response: { data: VenueDetailed }) => response.data,
       providesTags: ["Venue"],
     }),
-    login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (body) => ({
-        url: "auth/login",
-        method: "POST",
+    getOwnProfile: builder.query<UserWithBookings & UserWithVenues, string>({
+      query: (name) => `holidaze/profiles/${name}?_bookings=true&_venues=true`, 
+      providesTags: ["OwnProfile"],
+    }),
+    updateUserAvatar: builder.mutation<UserObject, { name: string; body: { avatar: string } }>({
+      query: ({ name, body }) => ({
+        url: `holidaze/profiles/${name}/media`,
+        method: "PUT",
         body,
       }),
       invalidatesTags: ["OwnProfile"],
     }),
-    register: builder.mutation<UserObject, RegisterUserObject>({
+    createBooking: builder.mutation<BookingWithVenue, CreateBooking>({
+      query: (body) => ({
+        url: "holidaze/bookings",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["OwnProfile", "VenueList"],
+    }),
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (body) => ({
+        url: "auth/login?_holidaze=true",
+        method: "POST",
+        body,
+      }),
+      transformResponse: (response: { data: LoginResponse }) => response.data,
+      invalidatesTags: ["OwnProfile"],
+    }),
+    becomeVenueManager: builder.mutation<UserObject, string>({
+      query: (name) => ({
+        url: `holidaze/profiles/${name}`,
+        method: "PUT",
+        body: { venueManager: false },
+      }),
+      invalidatesTags: ["OwnProfile"],
+    }),
+    register: builder.mutation<LoginResponse, RegisterUserObject>({
       query: (body) => ({
         url: "auth/register",
         method: "POST",
         body,
       }),
+      transformResponse: (response: { data: LoginResponse }) => response.data,
       invalidatesTags: ["OwnProfile"],
     }),
   }),
@@ -69,4 +100,9 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useGetVenueByIdQuery,
+  useGetOwnProfileQuery,
+  useUpdateUserAvatarMutation,
+  useBecomeVenueManagerMutation,
+  useCreateBookingMutation
 } = holidazeApi;
+

@@ -11,6 +11,15 @@ export interface Media  {
     alt: string;
 }
 
+export interface VenueGalleryProps {
+  url: string;
+  alt: string;
+}
+
+export interface ImageGallery {
+  images: VenueGalleryProps[];
+}
+
 export interface VenueLocation {
   address: string;
   city: string;
@@ -60,6 +69,7 @@ export interface VenueCardProps {
   price: number;
   location: VenueLocation;
   rating: 0 | 1 | 2 | 3 | 4 | 5;
+  
 }
 
 export interface VenueInfoProps {
@@ -83,6 +93,7 @@ export interface VenueWithOwner extends Venue {
 
 export interface VenueWithBookings extends Venue {
   bookings: Booking[];
+  gallery: ImageGallery;
 }
 
 export interface VenueDetailed extends VenueWithOwner, VenueWithBookings {}

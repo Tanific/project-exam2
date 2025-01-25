@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 export default function HomePage(): React.ReactElement {
   const { data, error, isLoading } = useGetTrendingVenuesQuery();
+  console.log(data);
 
   return (
       <Container
@@ -63,6 +64,7 @@ export default function HomePage(): React.ReactElement {
             {data?.map((venue) => (
               <VenueCard key={venue.id} {...venue} />
             ))}
+            
           </Box>
         </Box>
       </Container>

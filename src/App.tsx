@@ -9,6 +9,7 @@ import RegisterPage from "./pages/auth/registerPage";
 import VenuesPage from "./pages/venues/allVenuesPage"
 import "./index.css";
 import SingleVenuePage from "./pages/venues/singleVenuePage";
+import MyProfilePage from "./pages/profile/myProfilePage";
 import Layout from "./components/layout";
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
             <Route path="register" element={<RegisterPage />} />
             <Route path="venues" element={<VenuesPage />} />
             <Route path="venues/:venueId" element={<SingleVenuePage />} />
+            <Route path="profile" element={<MyProfilePage />} />
+
           </Route>
         </Routes>
       </Router>

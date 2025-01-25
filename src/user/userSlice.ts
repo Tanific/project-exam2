@@ -45,12 +45,13 @@ function clearState(): void {
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: loadState() || initialState,
+  initialState: loadState() ?? initialState,
   reducers: {
     logIn: (state, action: PayloadAction<LoginResponse>) => {
       state.isLoggedIn = true;
-      state.accessToken = action.payload.accessToken;
-      state.user = action.payload;
+      const { accessToken, ...user } = action.payload;
+      state.accessToken = accessToken;
+      state.user = user;
       saveState(state);
     },
     logout: (state) => {

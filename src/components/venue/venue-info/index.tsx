@@ -14,7 +14,8 @@ export default function VenueInfo(props: VenueInfoProps): React.ReactElement {
   return (
     <Stack
       spacing={3}
-      direction={{ xs: "column", md: "row" }}
+      direction={{ xs: "column", sm: "row" }}
+      justifyContent={"center"}
       alignItems={"center"}
       paddingBlock={2}
       marginBlockEnd={1}
