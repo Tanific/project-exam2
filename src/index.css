@@ -24,6 +24,118 @@ h3,
 h4,
 h5,
 h6 {
-    overflow-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
+.react-aria-RangeCalendar {
+  --text-color: rgb(255, 255, 255);
+  --text-color-disabled: rgb(104, 104, 104);
+  --text-color-unavailable: rgb(193, 13, 13);
+  --background-color: rgb(23, 23, 23);
+  --highlight-background: rgb(142, 0, 224);
+  --highlight-foreground: rgb(225, 225, 225);
+
+  width: fit-content;
+  max-width: 100%;
+  color: var(--text-color);
+
+  & header {
+    display: flex;
+    align-items: center;
+    margin: 0 4px 1.3rem 4px;
+
+    .react-aria-Heading {
+      flex: 1;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 0;
+      text-align: center;
+    }
+  }
+
+  .react-aria-Button {
+    width: 2rem;
+    background-color: var(--highlight-background);
+    padding: 3px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+  }
+
+  & table {
+    border-collapse: collapse;
+    border: 1px solid rgb(63, 63, 63);
+    background-color: var(--background-color);
+
+    & td {
+      padding: 2px;
+    }
+
+    & th {
+      padding-top: 4px;
+    }
+  }
+
+  .react-aria-CalendarCell {
+    width: 2.2rem;
+    line-height: 2.4rem;
+    text-align: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+
+    &[data-outside-month] {
+      color: rgb(63, 63, 63);
+    }
+
+    &[data-pressed] {
+      background: rgb(33, 33, 33);
+    }
+
+    &[data-focus-visible] {
+      box-shadow: inset 0 0 0 2px #5c5c5c;
+    }
+
+    &[data-selected] {
+      background: var(--highlight-background);
+      color: var(--highlight-foreground);
+      border-radius: 0;
+    }
+
+    &[data-today] {
+      border: 2px solid rgb(0, 0, 0);
+    }
+
+    &[data-selection-start] {
+      border-start-start-radius: 6px;
+      border-end-start-radius: 6px;
+    }
+
+    &[data-selection-end] {
+      border-start-end-radius: 6px;
+      border-end-end-radius: 6px;
+    }
+  
+    &[data-unavailable] {
+      text-decoration: line-through;
+      color: var(--text-color-unavailable);
+      cursor: not-allowed;
+    }
+
+    &[data-disabled] {
+      color: var(--text-color-disabled);
+    }
+
+    &[data-invalid] {
+      background: rgb(40, 40, 40);
+    }
+  }
+
+  .react-aria-CalendarHeaderCell {
+    font-size: 1.3rem;
+    font-weight: 800;
+    padding: 0.5rem 0;
+    text-align: center;
+  }
+}

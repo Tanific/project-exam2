@@ -2,9 +2,15 @@ import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { useBecomeVenueManagerMutation, useGetOwnProfileQuery } from "../../api/holidaze";
+import {
+  useBecomeVenueManagerMutation,
+  useGetOwnProfileQuery,
+} from "../../api/holidaze";
 import { becomeVenueManager as updateVenueManagerStatus } from "../../user/userSlice";
+import UpdateAvatar from "../../components/profile/update-avatar";
+import MyBookings from "../../components/profile/my-bookings";
 import { updateAvatar } from "../../user/userSlice";
+
 import {
   Avatar,
   Container,
@@ -28,11 +34,11 @@ export default function MyProfilePage(): React.ReactElement {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleClickOpen = (): void => {
+  const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (): void => {
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -45,6 +51,9 @@ export default function MyProfilePage(): React.ReactElement {
   if (isError) {
     console.error(error);
   }
+  if (data) {
+    console.log("Bookings array:", data.bookings);
+  }
 
   const handleBecomeVenueManager = async () => {
     try {
@@ -56,8 +65,8 @@ export default function MyProfilePage(): React.ReactElement {
   };
 
   React.useEffect(() => {
-    if (data?.avatar != null) {
-      dispatch(updateAvatar(data.avatar));
+    if (user?.avatar != null) {
+      dispatch(updateAvatar(user?.avatar));
     }
   }, []);
 
@@ -76,33 +85,36 @@ export default function MyProfilePage(): React.ReactElement {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
           gap: 2,
           padding: 2,
         }}
       >
-        <Avatar src={user?.avatar} sx={{ width: 100, height: 100 }} />
+        <Avatar src={user?.avatar.url} sx={{ width: 100, height: 100 }} />
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<EditIcon />}
+          onClick={handleOpen}
+        >
+          Update Avatar
+        </Button>
+        <UpdateAvatar open={open} handleClose={handleClose} name={user.name} />
         <Stack direction="column" spacing={2}>
           <Typography variant="h4">{user.name}</Typography>
           <Typography variant="subtitle1">{user.email}</Typography>
 
-        {user?.venueManager === true && (
-            <Chip
-              label="Venue Manager"
-              color="secondary"
-              variant="outlined"
-            />
-        )}
+          {user?.venueManager === true && (
+            <Chip label="Venue Manager" color="secondary" variant="outlined" />
+          )}
 
-        {user?.venueManager === false && (
-          <Button
-            variant="contained"
-            onClick={handleBecomeVenueManager}
-          >
-            Become Venue Manager
-          </Button>
-        )}
+          {user?.venueManager === false && (
+            <Button variant="contained" onClick={handleBecomeVenueManager}>
+              Become Venue Manager
+            </Button>
+          )}
         </Stack>
       </Box>
       <Box
@@ -113,7 +125,13 @@ export default function MyProfilePage(): React.ReactElement {
           gap: 2,
           padding: 2,
         }}
-      >
+      ></Box>
+      <Box component="section" sx={{ padding: 2 }}>
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <MyBookings bookings={data?.bookings || []} />
+        )}
       </Box>
     </Container>
   );

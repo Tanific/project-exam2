@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LoginResponse, UserState } from "../types/user";
+import { LoginResponse, UserState, Avatar } from "../types/user";
 
 const initialState: UserState = {
   isLoggedIn: false,
@@ -8,7 +8,7 @@ const initialState: UserState = {
     id: "",
     name: "",
     email: "",
-    avatar: "",
+    avatar: { url: "", alt: "" },    
     venueManager: false,
   },
 };
@@ -60,7 +60,7 @@ export const userSlice = createSlice({
       state.user = initialState.user;
       clearState();
     },
-    updateAvatar: (state, action: PayloadAction<string>) => {
+    updateAvatar: (state, action: PayloadAction<Avatar>) => {
       state.user.avatar = action.payload;
       saveState(state);
     },
@@ -72,6 +72,6 @@ export const userSlice = createSlice({
 });
 
 export const { logIn, logout, updateAvatar, becomeVenueManager } =
-  userSlice.actions;
+userSlice.actions;
 
 export default userSlice.reducer;

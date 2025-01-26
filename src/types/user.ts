@@ -4,12 +4,23 @@ import { BookingWithVenue } from "./booking";
 interface BaseUserObject {
   name: string;
   email: string;
-  avatar?: string;
+  avatar: Avatar;
   venueManager?: boolean;
+}
+
+export interface Avatar {
+  url: string;
+  alt: string;
 }
 
 export interface RegisterUserObject extends BaseUserObject {
   password: string;
+}
+
+export interface UpdateAvatarProps {
+  handleClose: () => void;
+  open: boolean;
+  name: string
 }
 
 export interface UserObject extends BaseUserObject {
@@ -27,6 +38,13 @@ export interface UserWithBookings extends UserObject {
   _count: { bookings: number; venues: number };
 }
 
+export interface UserProfileResponse {
+  data: UserWithBookings;
+  meta: any;
+}
+
+export type UserProfile = UserWithBookings;
+
 export interface UserWithVenues extends UserObject {
   venues: Venue[];
   _count: { bookings: number; venues: number };
@@ -40,3 +58,4 @@ export interface LoginRequest {
   email: string;
   password: string;
 }
+

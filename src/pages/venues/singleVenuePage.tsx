@@ -138,18 +138,15 @@ export default function SingleVenuePage(): React.ReactElement {
               />
 
               <VenueGallery images={data.media} />
-
             </Box>
-          <Box component="section" sx={{ padding: 2, marginBlock: 2 }}>
-            <I18nProvider locale="en-NO">
+            <Box sx={{ padding: 1, marginBlock: 1, }}>
               <BookingCalendar
                 bookings={data.bookings}
                 maxGuests={data.maxGuests}
                 venueId={data.id}
                 enableBooking={isLoggedIn}
               />
-            </I18nProvider>
-          </Box>
+            </Box>
           </Box>
         </Container>
       ) : null}

@@ -3,11 +3,11 @@ import { Venue, VenueDetailed } from "../types/venue";
 import { RootState } from "../store";
 import {
   UserObject,
-  UserWithBookings,
-  UserWithVenues,
   LoginRequest,
   RegisterUserObject,
   LoginResponse,
+  UserProfileResponse,
+  UserProfile,
 } from "../types/user";
 import { BookingDetailed, BookingWithVenue, CreateBooking, UpdateBooking } from "../types/booking";
 
@@ -45,13 +45,14 @@ export const holidazeApi = createApi({
       transformResponse: (response: { data: VenueDetailed }) => response.data,
       providesTags: ["Venue"],
     }),
-    getOwnProfile: builder.query<UserWithBookings & UserWithVenues, string>({
+    getOwnProfile: builder.query<UserProfile, string>({
       query: (name) => `holidaze/profiles/${name}?_bookings=true&_venues=true`, 
+      transformResponse: (response: UserProfileResponse ) => response.data,
       providesTags: ["OwnProfile"],
     }),
-    updateUserAvatar: builder.mutation<UserObject, { name: string; body: { avatar: string } }>({
+    updateUserAvatar: builder.mutation<UserObject, { name: string; body: { avatar: { url: string; alt: string } } }>({
       query: ({ name, body }) => ({
-        url: `holidaze/profiles/${name}/media`,
+        url: `holidaze/profiles/${name}`,
         method: "PUT",
         body,
       }),
@@ -78,7 +79,7 @@ export const holidazeApi = createApi({
       query: (name) => ({
         url: `holidaze/profiles/${name}`,
         method: "PUT",
-        body: { venueManager: false },
+        body: { venueManager: true },
       }),
       invalidatesTags: ["OwnProfile"],
     }),
@@ -90,6 +91,48 @@ export const holidazeApi = createApi({
       }),
       transformResponse: (response: { data: LoginResponse }) => response.data,
       invalidatesTags: ["OwnProfile"],
+    }),
+    createVenue: builder.mutation<Venue, VenueFormSchema>({
+      query: (body) => ({
+        url: "holidaze/venues",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["VenueList", "OwnProfile"],
+    }),
+    updateVenue: builder.mutation<Venue, { venueId: string; body: VenueFormSchema }>({
+      query: ({ venueId, body }) => ({
+        url: `holidaze/venues/${venueId}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Venue", "VenueList", "OwnProfile"],
+    }),
+    deleteVenue: builder.mutation<Venue, string>({
+      query: (venueId) => ({
+        url: `holidaze/venues/${venueId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["VenueList", "OwnProfile"],
+    }),
+    getBooking: builder.query<BookingDetailed, string>({
+      query: (bookingId) => `holidaze/bookings/${bookingId}?_venue=true&_customer=true`,
+      providesTags: ["Booking"],
+    }),
+    updateBooking: builder.mutation<BookingDetailed, UpdateBooking>({
+      query: ({ bookingId, body }) => ({
+        url: `holidaze/bookings/${bookingId}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Booking", "Venue", "OwnProfile"],
+    }),
+    deleteBooking: builder.mutation<BookingWithVenue, string>({
+      query: (bookingId) => ({
+        url: `holidaze/bookings/${bookingId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Booking", "OwnProfile"],
     }),
   }),
 });
@@ -103,6 +146,12 @@ export const {
   useGetOwnProfileQuery,
   useUpdateUserAvatarMutation,
   useBecomeVenueManagerMutation,
-  useCreateBookingMutation
+  useCreateBookingMutation,
+  useCreateVenueMutation,
+  useUpdateVenueMutation,
+  useDeleteVenueMutation,
+  useGetBookingQuery,
+  useUpdateBookingMutation,
+  useDeleteBookingMutation,
 } = holidazeApi;
 
