@@ -128,7 +128,7 @@ h6 {
     }
 
     &[data-invalid] {
-      background: rgb(40, 40, 40);
+      background: rgb(67, 67, 67);
     }
   }
 

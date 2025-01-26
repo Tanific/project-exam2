@@ -25,13 +25,18 @@ export default function UpdateAvatar(props: UpdateAvatarProps): React.ReactEleme
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Update avatar</DialogTitle>
-      <DialogContent>
+      <DialogTitle sx={{ color: "primary.main"}}>Update avatar</DialogTitle>
+      <DialogContent sx={{ color: "primary.main"}}>
         <TextField
           fullWidth
           label="Avatar URL"
           value={avatar}
           onChange={(e) => setAvatar(e.target.value)}
+          slotProps={{
+            htmlInput: {
+                style: { color: "black" },
+            },
+        }}
         />
       </DialogContent>
       <DialogActions>

@@ -154,4 +154,3 @@ export const {
   useUpdateBookingMutation,
   useDeleteBookingMutation,
 } = holidazeApi;
-
