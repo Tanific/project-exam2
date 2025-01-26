@@ -13,7 +13,7 @@ import { VenueCardProps } from "../../../types/venue";
 import { Link } from "react-router-dom";
 
 export default function VenueCard(props: VenueCardProps): React.ReactElement {
-  const { id, name, media, price, location, rating } = props;
+  const { id, name, media, price, location, rating, cardHeadingLevel = 5 } = props;
   const imageUrl = media?.[0]?.url ?? VenuePlaceholder;
 
   return (
@@ -39,7 +39,7 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
          }}
       />
       <CardContent>
-        <Typography variant="h5" sx={{ marginBottom: 1, color: "primary.dark" }}>
+        <Typography variant={`h${cardHeadingLevel}`} component={`h${cardHeadingLevel}`}>
           {name}
         </Typography>
         <Typography

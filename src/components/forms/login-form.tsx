@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../api/holidaze";
-import { logIn } from "../../user/userSlice";
+import { logIn } from "../../slice/userSlice";
 import {
   Button,
   TextField,

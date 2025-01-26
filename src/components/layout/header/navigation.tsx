@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, IconButton, Menu, MenuItem } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
-import { logout } from "../../../user/userSlice";
+import { logout } from "../../../slice/userSlice";
 
 export default function Navigation() {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);

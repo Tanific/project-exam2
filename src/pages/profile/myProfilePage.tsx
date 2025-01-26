@@ -6,10 +6,12 @@ import {
   useBecomeVenueManagerMutation,
   useGetOwnProfileQuery,
 } from "../../api/holidaze";
-import { becomeVenueManager as updateVenueManagerStatus } from "../../user/userSlice";
+import { becomeVenueManager as updateVenueManagerStatus } from "../../slice/userSlice";
+import { updateAvatar } from "../../slice/userSlice";
+
 import UpdateAvatar from "../../components/profile/update-avatar";
 import MyBookings from "../../components/profile/my-bookings";
-import { updateAvatar } from "../../user/userSlice";
+import VenueList from "../../components/profile/my-venues";
 
 import {
   Avatar,
@@ -52,7 +54,7 @@ export default function MyProfilePage(): React.ReactElement {
     console.error(error);
   }
   if (data) {
-    console.log("Bookings array:", data.bookings);
+    console.log(data);
   }
 
   const handleBecomeVenueManager = async () => {
@@ -92,7 +94,7 @@ export default function MyProfilePage(): React.ReactElement {
           padding: 2,
         }}
       >
-        <Avatar src={user?.avatar.url} sx={{ width: 100, height: 100 }} />
+        <Avatar src={user?.avatar?.url} sx={{ width: 100, height: 100 }} />
         <Button
           variant="contained"
           color="primary"
@@ -115,6 +117,17 @@ export default function MyProfilePage(): React.ReactElement {
               Become Venue Manager
             </Button>
           )}
+          <Box>
+        <Button
+          component={Link}
+          to="/venues/create"
+          variant="contained"
+          color="secondary"
+          startIcon={<AddIcon />}
+        >
+          Create a Venue
+        </Button>
+      </Box>
         </Stack>
       </Box>
       <Box
@@ -127,11 +140,16 @@ export default function MyProfilePage(): React.ReactElement {
         }}
       ></Box>
       <Box component="section" sx={{ padding: 2 }}>
+      <Typography variant="h4">My Bookings</Typography>
         {isLoading ? (
           <CircularProgress />
         ) : (
           <MyBookings bookings={data?.bookings || []} />
         )}
+      </Box>
+      <Box>
+        <Typography variant="h4">My Venues</Typography>
+        <VenueList venues={data?.venues || []} />
       </Box>
     </Container>
   );

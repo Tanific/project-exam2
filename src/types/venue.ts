@@ -6,9 +6,9 @@ interface VenueOwner {
   avatar: string;
 }
 
-export interface Media  {
-    url: string;
-    alt: string;
+export interface Media {
+  url: string;
+  alt: string;
 }
 
 export interface VenueGalleryProps {
@@ -21,13 +21,13 @@ export interface ImageGallery {
 }
 
 export interface VenueLocation {
-  address: string;
-  city: string;
-  zip: string;
-  country: string;
-  continent: string;
-  lat: number;
-  lng: number;
+  address?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
+  continent?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface VenueMeta {
@@ -40,12 +40,12 @@ export interface VenueMeta {
 export interface CreateVenue {
   name: string;
   description: string;
-  media: Media[];
+  media?: Media[];
   price: number;
   maxGuests: number;
-  rating: 0 | 1 | 2 | 3 | 4 | 5;
-  meta: VenueMeta;
-  location: VenueLocation;
+  rating?: 0 | 1 | 2 | 3 | 4 | 5;
+  meta?: VenueMeta;
+  location?: VenueLocation;
 }
 
 export interface UpdateVenue {
@@ -53,32 +53,37 @@ export interface UpdateVenue {
   body: {
     name: string;
     description: string;
-    media: Media[];
+    media?: Media[];
     price: number;
     maxGuests: number;
     rating: 0 | 1 | 2 | 3 | 4 | 5;
     meta: VenueMeta;
-    location: VenueLocation;
+    location?: VenueLocation;
   };
+}
+
+export interface VenueListProps {
+  venues: Venue[];
+  cardHeadingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
 export interface VenueCardProps {
   id: string;
   name: string;
-  media: Media[];
+  media?: Media[];
   price: number;
-  location: VenueLocation;
-  rating: 0 | 1 | 2 | 3 | 4 | 5;
-  
+  location?: VenueLocation;
+  rating?: 0 | 1 | 2 | 3 | 4 | 5;
+  cardHeadingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
 export interface VenueInfoProps {
-  wifi: boolean
-  pets: boolean
-  rating: 0 | 1 | 2 | 3 | 4 | 5
-  breakfast: boolean
-  parking: boolean
-  maxGuests: number
+  wifi?: boolean;
+  pets?: boolean;
+  rating?: 0 | 1 | 2 | 3 | 4 | 5;
+  breakfast?: boolean;
+  parking?: boolean;
+  maxGuests?: number;
 }
 
 export interface Venue extends CreateVenue {
@@ -97,3 +102,5 @@ export interface VenueWithBookings extends Venue {
 }
 
 export interface VenueDetailed extends VenueWithOwner, VenueWithBookings {}
+
+export interface VenueGalleryProps extends Media {}

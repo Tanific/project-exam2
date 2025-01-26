@@ -6,9 +6,11 @@ import defaultTheme from "./themes/default";
 import HomePage from "./pages";
 import LoginPage from "./pages/auth/loginPage";
 import RegisterPage from "./pages/auth/registerPage";
-import VenuesPage from "./pages/venues/allVenuesPage"
+import VenuesPage from "./pages/venues/allVenuesPage";
 import "./index.css";
+import UpdateVenuePage from "./pages/venues/updateVenuePage";
 import SingleVenuePage from "./pages/venues/singleVenuePage";
+import CreateVenuePage from "./pages/venues/createVenuePage";
 import MyProfilePage from "./pages/profile/myProfilePage";
 import Layout from "./components/layout";
 
@@ -25,7 +27,8 @@ function App() {
             <Route path="venues" element={<VenuesPage />} />
             <Route path="venues/:venueId" element={<SingleVenuePage />} />
             <Route path="profile" element={<MyProfilePage />} />
-
+            <Route path="venues/create" element={<CreateVenuePage />} />
+            <Route path="venues/edit/:venueId" element={<UpdateVenuePage />} />
           </Route>
         </Routes>
       </Router>

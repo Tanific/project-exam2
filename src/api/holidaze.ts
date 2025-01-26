@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Venue, VenueDetailed } from "../types/venue";
+import { Venue, VenueDetailed, CreateVenue, UpdateVenue } from "../types/venue";
 import { RootState } from "../store";
 import {
   UserObject,
   LoginRequest,
   RegisterUserObject,
   LoginResponse,
-  UserProfileResponse,
-  UserProfile,
+  UserWithBookings,
+  UserWithVenues,
 } from "../types/user";
 import { BookingDetailed, BookingWithVenue, CreateBooking, UpdateBooking } from "../types/booking";
 
@@ -45,9 +45,9 @@ export const holidazeApi = createApi({
       transformResponse: (response: { data: VenueDetailed }) => response.data,
       providesTags: ["Venue"],
     }),
-    getOwnProfile: builder.query<UserProfile, string>({
+    getOwnProfile: builder.query<UserWithBookings & UserWithVenues, string>({
       query: (name) => `holidaze/profiles/${name}?_bookings=true&_venues=true`, 
-      transformResponse: (response: UserProfileResponse ) => response.data,
+      transformResponse: (response: { data: UserWithBookings & UserWithVenues }) => response.data,
       providesTags: ["OwnProfile"],
     }),
     updateUserAvatar: builder.mutation<UserObject, { name: string; body: { avatar: { url: string; alt: string } } }>({
@@ -92,7 +92,7 @@ export const holidazeApi = createApi({
       transformResponse: (response: { data: LoginResponse }) => response.data,
       invalidatesTags: ["OwnProfile"],
     }),
-    createVenue: builder.mutation<Venue, VenueFormSchema>({
+    createVenue: builder.mutation<Venue, CreateVenue>({
       query: (body) => ({
         url: "holidaze/venues",
         method: "POST",
@@ -100,7 +100,7 @@ export const holidazeApi = createApi({
       }),
       invalidatesTags: ["VenueList", "OwnProfile"],
     }),
-    updateVenue: builder.mutation<Venue, { venueId: string; body: VenueFormSchema }>({
+    updateVenue: builder.mutation<Venue, { venueId: string; body: UpdateVenue }>({
       query: ({ venueId, body }) => ({
         url: `holidaze/venues/${venueId}`,
         method: "PUT",

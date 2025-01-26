@@ -1,10 +1,11 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { Link } from "react-router-dom";
-import { useGetVenueByIdQuery } from "../../api/holidaze";
-import { I18nProvider } from "react-aria-components";
+import { useGetVenueByIdQuery, useDeleteVenueMutation } from "../../api/holidaze";
+import { Booking } from "../../types/booking";
+import { Venue, VenueGalleryProps } from "../../types/venue";
 import {
   Box,
   CircularProgress,
@@ -13,24 +14,67 @@ import {
   Tooltip,
   Typography,
   Button,
+  List,
+  ListItem,
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import VenueInfo from "../../components/venue/venue-info";
 import VenueGallery from "../../components/venue/venue-gallery";
 import BookingCalendar from "../../components/venue/booking-calendar";
 
 export default function SingleVenuePage(): React.ReactElement {
   const { venueId } = useParams();
-  const { data, error, isError, isLoading } = useGetVenueByIdQuery(
-    venueId ?? ""
-  );
+  const navigate = useNavigate();
+  const { data, error, isError, isLoading } = useGetVenueByIdQuery(venueId ?? "");
+  const [deleteVenue, { isLoading: isDeleting }] = useDeleteVenueMutation();
+  const [openDeleteDialog, setOpenDeleteDialog] = React.useState<boolean>(false);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userName = useSelector((state: RootState) => state.user.user.name);
+  const [openBookings, setOpenBookings] = React.useState<boolean>(false);
   const isOwnVenue = userName === data?.owner.name;
+  const formatDate = (dateString: string): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   console.log(data);
 
   if (error != null) console.error(error);
+  const handleOpenBookings = () => {
+    setOpenBookings(true);
+  };
+  
+  const handleCloseBookings = () => {
+    setOpenBookings(false);
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteVenue(venueId!).unwrap();
+      navigate("/venues"); // Navigate to venues list after deletion
+    } catch (err) {
+      console.error("Failed to delete venue:", err);
+      // Optionally, display an error message to the user
+    }
+  };
 
   return (
     <>
@@ -45,7 +89,7 @@ export default function SingleVenuePage(): React.ReactElement {
             color: "white",
           }}
         >
-          <p>Oh no, there was an error</p>
+          <Typography variant="h5">Oh no, there was an error.</Typography>
         </Box>
       ) : isLoading ? (
         <Box
@@ -67,7 +111,9 @@ export default function SingleVenuePage(): React.ReactElement {
             justifyContent: "center",
             backgroundColor: "primary.main",
             minWidth: "100vw",
+            flexDirection: "column",
             flex: 1,
+            alignItems: "center",
           }}
         >
           <Box
@@ -82,17 +128,48 @@ export default function SingleVenuePage(): React.ReactElement {
               sx={{
                 marginTop: 2,
                 paddingX: 2,
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 3,
+                flexWrap: "wrap",
               }}
             >
               <Button
-                variant="outlined"
                 component={Link}
                 to="/venues"
-                sx={{ borderColor: "secondary.main", color: "secondary.light" }}
+                sx={{ borderColor: "secondary.main", color: "secondary.light", textDecoration: "underline" }}
               >
-                Back to all venues
+                Go back
               </Button>
+              {isOwnVenue && (
+                <>
+                  <Button
+                    variant="outlined"
+                    onClick={handleOpenBookings}
+                    sx={{ borderColor: "secondary.main", color: "secondary.light" }}
+                  >
+                  Bookings
+                  </Button>
+                  <Button
+                    variant="contained"
+                    component={Link}
+                    to={`/venues/edit/${venueId}`}
+                    sx={{ backgroundColor: "secondary.main", color: "white" }}
+                  >
+                    Edit Venue
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                    onClick={handleOpenDeleteDialog}
+                  >
+                    Delete Venue
+                  </Button>
+                </>
+              )}
             </Box>
+
             <Box
               sx={{
                 flex: 1,
@@ -120,7 +197,8 @@ export default function SingleVenuePage(): React.ReactElement {
                     <Tooltip title="Edit venue">
                       <IconButton
                         aria-label="edit venue"
-                        href={`/venues/edit/${data.id}/`}
+                        component={Link}
+                        to={`/venues/edit/${data.id}/`}
                       >
                         <EditIcon color="primary" />
                       </IconButton>
@@ -129,17 +207,17 @@ export default function SingleVenuePage(): React.ReactElement {
                 </Typography>
               </Box>
               <VenueInfo
-                wifi={data.meta.wifi}
-                pets={data.meta.pets}
+                wifi={data.meta?.wifi}
+                pets={data.meta?.pets}
                 rating={data.rating}
-                breakfast={data.meta.breakfast}
-                parking={data.meta.parking}
+                breakfast={data.meta?.breakfast}
+                parking={data.meta?.parking}
                 maxGuests={data.maxGuests}
               />
 
-              <VenueGallery images={data.media} />
+              <VenueGallery images={data.media as VenueGalleryProps[]} />
             </Box>
-            <Box sx={{ padding: 1, marginBlock: 1, }}>
+            <Box sx={{ padding: 1, marginBlock: 1 }}>
               <BookingCalendar
                 bookings={data.bookings}
                 maxGuests={data.maxGuests}
@@ -148,6 +226,57 @@ export default function SingleVenuePage(): React.ReactElement {
               />
             </Box>
           </Box>
+          <Dialog
+            open={openDeleteDialog}
+            onClose={handleCloseDeleteDialog}
+            aria-labelledby="delete-venue-dialog-title"
+          >
+            <DialogTitle id="delete-venue-dialog-title">Delete Venue</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Are you sure you want to delete <strong>{data.name}</strong>?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDeleteDialog} color="primary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmDelete}
+                color="error"
+                variant="contained"
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {isOwnVenue && (
+            <Dialog open={openBookings} onClose={handleCloseBookings} fullWidth maxWidth="sm">
+              <DialogTitle>All Bookings for This Venue</DialogTitle>
+              <DialogContent dividers>
+                {data.bookings && data.bookings.length > 0 ? (
+                  <List>
+                    {data.bookings.map((booking: Booking) => (
+                      <ListItem key={booking.id} divider>
+                        <ListItemText
+                          primary={booking.customer.name} // Adjust based on your data structure
+                          secondary={`${formatDate(booking.dateFrom)} to ${formatDate(booking.dateTo)}`}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                ) : (
+                  <Typography>No bookings available for this venue.</Typography>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseBookings} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
         </Container>
       ) : null}
     </>

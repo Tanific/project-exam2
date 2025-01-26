@@ -1,9 +1,10 @@
 import { Venue } from "./venue.ts";
+import { Avatar } from "./user.ts";
 
-interface Customer {
+export interface Customer {
   name: string;
   email: string;
-  avatar: string;
+  avatar: Avatar;
 }
 
 export interface BookingBase {
@@ -20,7 +21,7 @@ export interface BookingCalendarProps {
 }
 
 export interface BookingListProps {
-    bookings: BookingWithVenue[];
+    bookings: Booking[];
 }
 
 export interface CreateBooking extends BookingBase {
@@ -31,13 +32,14 @@ export interface Booking extends BookingBase {
   id: string;
   created: string;
   updated: string;
+  customer: Customer;
 }
 
 export interface BookingWithVenue extends Booking {
   venue: Venue;
 }
 
-export interface BookingDetailed extends BookingWithVenue {
+export interface BookingDetailed extends Booking {
   customer: Customer;
 }
 

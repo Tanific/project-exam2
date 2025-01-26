@@ -14,7 +14,7 @@ const defaultTheme = createTheme({
             hover: "#7A00B3",
         },
         text: {
-            primary: "#FFFFFF",
+            primary: "#030711",
         },
     },
     typography: {
