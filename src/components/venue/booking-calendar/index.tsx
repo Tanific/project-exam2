@@ -25,14 +25,17 @@ export default function BookingCalendar(
   props: BookingCalendarProps
 ): React.ReactElement {
   const { bookings, maxGuests = 100, venueId, enableBooking = false } = props;
+  const [guestsError, setGuestsError] = useState<string>("");
   const [createBooking] = useCreateBookingMutation();
   const [guests, setGuests] = useState<number>(1);
+  const [bookingError, setBookingError] = useState<string>("");
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery("(width < 900px)");
+
   const [dates, setDates] = useState({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()),
   });
-  const navigate = useNavigate();
-  const isMobile = useMediaQuery("(width < 900px)");
 
   const isDateUnavailable = (currentDate: DateValue): boolean => {
     return bookings.some(
@@ -46,17 +49,35 @@ export default function BookingCalendar(
     const dateFrom = new Date(dates.start.toString()).toISOString();
     const dateTo = new Date(dates.end.toString()).toISOString();
 
-    await createBooking({ dateTo, dateFrom, guests, venueId });
-    navigate("/profile");
+    try {
+      await createBooking({ dateTo, dateFrom, guests, venueId }).unwrap();
+      /*navigate("/profile");*/
+    } catch (error) {
+      const errorMessage =
+      error?.data?.errors?.[0]?.message
+      console.error("Booking failed:", errorMessage);
+      setBookingError(errorMessage);
+    }
   };
 
   return (
-    <Box sx={{ marginBlock: 1, display: "flex", flexDirection: "column", flex: 1, alignItems: "center", width: "100%" }}>
+    <Box
+      sx={{
+        marginBlock: 1,
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       <RangeCalendar
         isReadOnly={!enableBooking}
         aria-label="Booking dates"
         value={dates}
-        onChange={setDates}
+        onChange={(newDates) => {
+          setDates(newDates);
+        }}
         minValue={today(getLocalTimeZone())}
         visibleDuration={{ months: isMobile ? 1 : 2 }}
         isDateUnavailable={isDateUnavailable}
@@ -79,6 +100,12 @@ export default function BookingCalendar(
           )}
         </Box>
       </RangeCalendar>
+
+      {bookingError && (
+        <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+          {bookingError}
+        </Typography>
+      )}
       {enableBooking ? (
         <Stack
           direction="row"
@@ -86,14 +113,21 @@ export default function BookingCalendar(
           gap={4}
           sx={{ marginBlock: 1 }}
         >
-          <TextField sx={{ color: "white" }}
+          <TextField
             label={"Guests"}
-            variant={"outlined"}
             margin={"normal"}
             type={"number"}
             value={guests}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setGuests(e.target.valueAsNumber);
+              const value = e.target.valueAsNumber;
+              setGuests(value);
+              if (value >= 1 && value <= maxGuests) {
+                setGuestsError(""); // Clear error when valid
+              } else {
+                setGuestsError(
+                  `Number of guests must be between 1 and ${maxGuests}.` // Set appropriate error message
+                );
+              }
             }}
             slotProps={{
               htmlInput: {
@@ -101,17 +135,28 @@ export default function BookingCalendar(
                 max: maxGuests,
                 inputMode: "numeric",
                 pattern: "[0-9]*",
-                style: { color: "white" },
+                style: {
+                  color: "white",
+                  backgroundColor: "#303030",
+                  padding: "15px 35px",
+                  border: "none",
+                },
               },
-            }} 
+              inputLabel: { style: { color: "white" } },
+            }}
           />
           <MuiButton
             variant="contained"
             onClick={handleBooking}
-            sx={{ marginBlock: 2, backgroundColor: "secondary.detail", color: "white" }}
+            sx={{
+              marginBlock: 2,
+              backgroundColor: "secondary.detail",
+              color: "white",
+            }}
           >
             Book Venue
           </MuiButton>
+          
         </Stack>
       ) : (
         <Typography

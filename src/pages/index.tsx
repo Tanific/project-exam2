@@ -23,7 +23,7 @@ export default function HomePage(): React.ReactElement {
             variant="h2"
             component="h1"
             gutterBottom
-            sx={{ paddingTop: 6, color: "text.primary" }}
+            sx={{ paddingTop: 6, color: "white" }}
           >
             Turn dreams into reality
           </Typography>
@@ -31,7 +31,7 @@ export default function HomePage(): React.ReactElement {
             variant="h5"
             component="h2"
             gutterBottom
-            sx={{ color: "text.primary" }}
+            sx={{ color: "white" }}
           >
             Start the journey with a simple click
           </Typography>
@@ -49,7 +49,7 @@ export default function HomePage(): React.ReactElement {
             variant="h4"
             component="h3"
             gutterBottom
-            sx={{ textAlign: "center", color: "text.primary" }}
+            sx={{ textAlign: "center", color: "white" }}
           >
             Holidaze <span style={{ color: "#8E00E0" }}>recommends</span>
           </Typography>
@@ -62,8 +62,19 @@ export default function HomePage(): React.ReactElement {
             }}
           >
             {data?.map((venue) => (
-              <VenueCard key={venue.id} {...venue} />
-            ))}
+            <Box
+              key={venue.id}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: "1 1 300px",
+                maxWidth: "300px", 
+                width: "100%",   
+              }}
+            >
+              <VenueCard {...venue} />
+            </Box>
+          ))}
             
           </Box>
         </Box>

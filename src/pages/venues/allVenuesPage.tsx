@@ -13,7 +13,9 @@ export default function VenuesPage(): React.ReactElement {
     setVisibleCount((prevCount) => prevCount + 12);
   };
 
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setSearchInput(event.target.value);
   };
 
@@ -23,65 +25,74 @@ export default function VenuesPage(): React.ReactElement {
 
   console.log("Filtered Data:", filteredData);
   return (
-      <Container
-        sx={{
-          backgroundColor: "primary.main",
-          minWidth: "100vw",
-          flex: 1,
-        }}
-      >
-        <Box sx={{ textAlign: "center" }}>
-          <Typography
-            variant="h2"
-            component="h1"
-            gutterBottom
-            sx={{ paddingTop: 6, color: "text.primary" }}
-          >
-            All Venues
-          </Typography>
-          <TextField
-            label="Search Venues"
-            variant="outlined"
-            value={searchInput}
-            onChange={handleSearchInputChange}
-            sx={{ marginTop: 2, marginBottom: 4, width: "50%", backgroundColor: "background.paper" }}
-            slotProps={{
-                input: { style: { color: 'black' } },
-            }}
-          />
+    <Container
+      sx={{
+        backgroundColor: "primary.main",
+        minWidth: "100vw",
+        flex: 1,
+      }}
+    >
+      <Box sx={{ textAlign: "center" }}>
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          sx={{ paddingTop: 6, color: "white" }}
+        >
+          All Venues
+        </Typography>
+        <TextField
+          label="Search Venues"
+          variant="outlined"
+          value={searchInput}
+          onChange={handleSearchInputChange}
+          sx={{
+            marginTop: 2,
+            marginBottom: 4,
+            width: "50%",
+            backgroundColor: "background.paper",
+          }}
+          slotProps={{
+            input: { style: { color: "black" } },
+          }}
+        />
+      </Box>
+      <Box sx={{ marginTop: 6 }}>
+        <Typography
+          variant="h4"
+          component="h3"
+          gutterBottom
+          sx={{ textAlign: "center", color: "text.primary" }}
+        ></Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 2,
+            justifyContent: "center",
+            maxWidth: 1400,
+            margin: "0 auto",
+          }}
+        >
+          {Array.isArray(filteredData) &&
+            filteredData.slice(0, visibleCount).map((venue) => (
+              <Box key={venue.id} sx={{ flex: "1 1 300px", maxWidth: "345px", display: "flex", flexDirection: "column" }}>
+                <VenueCard {...venue} />
+              </Box>
+            ))}
         </Box>
-        <Box sx={{ marginTop: 6 }}>
-          <Typography
-            variant="h4"
-            component="h3"
-            gutterBottom
-            sx={{ textAlign: "center", color: "text.primary" }}
-          ></Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 2,
-              justifyContent: "center",
-              maxWidth: 1400,
-              margin: "0 auto",
-            }}
-          >
-            {Array.isArray(filteredData) &&
-              filteredData.slice(0, visibleCount).map((venue) => (
-                <Box key={venue.id} sx={{ flex: "1 1 300px", maxWidth: "345px" }}>
-                  <VenueCard {...venue} />
-                </Box>
-              ))}
+        {filteredData && visibleCount < filteredData.length && (
+          <Box sx={{ textAlign: "center", margin: 4 }}>
+            <Button
+              variant="contained"
+              onClick={loadMore}
+              sx={{ backgroundColor: "secondary.main" }}
+            >
+              Load More
+            </Button>
           </Box>
-          {filteredData && visibleCount < filteredData.length && (
-            <Box sx={{ textAlign: "center", margin: 4 }}>
-              <Button variant="contained" onClick={loadMore} sx={{ backgroundColor: "secondary.main" }}>
-                Load More
-              </Button>
-            </Box>
-          )}
-        </Box>
-      </Container>
+        )}
+      </Box>
+    </Container>
   );
 }

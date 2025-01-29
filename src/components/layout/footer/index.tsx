@@ -13,7 +13,7 @@ export default function Footer(): React.ReactElement {
         paddingBlock: 1,
       }}
     >
-      <Typography variant="body2" sx={{ color: "text.primary" }}>
+      <Typography variant="body2" sx={{ color: "white" }}>
         {`©${currentYear} - `}Project Exam 2 - Tonje Stensen
       </Typography>
     </Box>

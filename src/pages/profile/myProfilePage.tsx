@@ -7,8 +7,6 @@ import {
   useGetOwnProfileQuery,
 } from "../../api/holidaze";
 import { becomeVenueManager as updateVenueManagerStatus } from "../../slice/userSlice";
-import { updateAvatar } from "../../slice/userSlice";
-
 import UpdateAvatar from "../../components/profile/update-avatar";
 import MyBookings from "../../components/profile/my-bookings";
 import VenueList from "../../components/profile/my-venues";
@@ -16,12 +14,10 @@ import VenueList from "../../components/profile/my-venues";
 import {
   Avatar,
   Container,
-  Badge,
   Box,
   Button,
   Chip,
   CircularProgress,
-  List,
   Stack,
   Typography,
 } from "@mui/material";
@@ -66,11 +62,11 @@ export default function MyProfilePage(): React.ReactElement {
     }
   };
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (user?.avatar != null) {
       dispatch(updateAvatar(user?.avatar));
     }
-  }, []);
+  }, []);*/
 
   return (
     <Container
@@ -78,7 +74,7 @@ export default function MyProfilePage(): React.ReactElement {
         display: "flex",
         flexDirection: "column",
         gap: 2,
-        padding: 2,
+        padding: 4,
         flex: 1,
         minWidth: "100vw",
         backgroundColor: "primary.main",
@@ -89,68 +85,93 @@ export default function MyProfilePage(): React.ReactElement {
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          alignItems: "center",
-          gap: 2,
-          padding: 2,
+          flexWrap: "wrap",
+          gap: 6,
         }}
       >
-        <Avatar src={user?.avatar?.url} sx={{ width: 100, height: 100 }} />
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<EditIcon />}
-          onClick={handleOpen}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            padding: 2,
+          }}
         >
-          Update Avatar
-        </Button>
+          <Avatar
+            src={user?.avatar?.url}
+            sx={{ width: { xs: 100, md: 200 }, height: { xs: 100, md: 200 } }}
+          />
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<EditIcon />}
+            onClick={handleOpen}
+            style={{ borderColor: "#8E00E0", color: "white" }}
+          >
+            Update Avatar
+          </Button>
+        </Box>
         <UpdateAvatar open={open} handleClose={handleClose} name={user.name} />
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h4">{user.name}</Typography>
-          <Typography variant="subtitle1">{user.email}</Typography>
+        <Stack direction="column" spacing={2} alignSelf="center">
+          <Typography variant="h4" color="white">
+            {user.name}
+          </Typography>
+          <Typography variant="subtitle1" color="white">
+            {user.email}
+          </Typography>
 
           {user?.venueManager === true && (
-            <Chip label="Venue Manager" color="secondary" variant="outlined" />
+            <Chip
+              label="Venue Manager"
+              variant="outlined"
+              style={{ borderColor: "#42B34E", color: "white" }}
+            />
           )}
 
           {user?.venueManager === false && (
-            <Button variant="contained" onClick={handleBecomeVenueManager}>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#42B34E", color: "black" }}
+              onClick={handleBecomeVenueManager}
+            >
               Become Venue Manager
             </Button>
           )}
-          <Box>
-        <Button
-          component={Link}
-          to="/venues/create"
-          variant="contained"
-          color="secondary"
-          startIcon={<AddIcon />}
-        >
-          Create a Venue
-        </Button>
-      </Box>
+          <Button
+            component={Link}
+            to="/venues/create"
+            variant="contained"
+            style={{ backgroundColor: "#42B34E", color: "black" }}
+            startIcon={<AddIcon />}
+          >
+            Create a Venue
+          </Button>
         </Stack>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 2,
-          padding: 2,
-        }}
-      ></Box>
-      <Box component="section" sx={{ padding: 2 }}>
-      <Typography variant="h4">My Bookings</Typography>
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <MyBookings bookings={data?.bookings || []} />
-        )}
-      </Box>
-      <Box>
-        <Typography variant="h4">My Venues</Typography>
+      <Typography
+        variant="h4"
+        sx={{ color: "white", padding: 2, textAlign: "center", margin: 2 }}
+      >
+        My Bookings
+      </Typography>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <MyBookings bookings={data?.bookings || []} />
+      )}
+      <Typography
+        variant="h4"
+        sx={{ color: "white", padding: 2, textAlign: "center" }}
+      >
+        My Venues
+      </Typography>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
         <VenueList venues={data?.venues || []} />
-      </Box>
+      )}
     </Container>
   );
 }

@@ -21,7 +21,7 @@ export interface BookingCalendarProps {
 }
 
 export interface BookingListProps {
-    bookings: Booking[];
+    bookings: BookingWithVenue[];
 }
 
 export interface CreateBooking extends BookingBase {
@@ -33,6 +33,7 @@ export interface Booking extends BookingBase {
   created: string;
   updated: string;
   customer: Customer;
+  venue: Venue;
 }
 
 export interface BookingWithVenue extends Booking {

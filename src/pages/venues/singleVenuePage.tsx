@@ -3,9 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { Link } from "react-router-dom";
-import { useGetVenueByIdQuery, useDeleteVenueMutation } from "../../api/holidaze";
+import {
+  useGetVenueByIdQuery,
+  useDeleteVenueMutation,
+} from "../../api/holidaze";
 import { Booking } from "../../types/booking";
-import { Venue, VenueGalleryProps } from "../../types/venue";
+import { VenueGalleryProps } from "../../types/venue";
 import {
   Box,
   CircularProgress,
@@ -32,9 +35,12 @@ import BookingCalendar from "../../components/venue/booking-calendar";
 export default function SingleVenuePage(): React.ReactElement {
   const { venueId } = useParams();
   const navigate = useNavigate();
-  const { data, error, isError, isLoading } = useGetVenueByIdQuery(venueId ?? "");
+  const { data, error, isError, isLoading } = useGetVenueByIdQuery(
+    venueId ?? ""
+  );
   const [deleteVenue, { isLoading: isDeleting }] = useDeleteVenueMutation();
-  const [openDeleteDialog, setOpenDeleteDialog] = React.useState<boolean>(false);
+  const [openDeleteDialog, setOpenDeleteDialog] =
+    React.useState<boolean>(false);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userName = useSelector((state: RootState) => state.user.user.name);
   const [openBookings, setOpenBookings] = React.useState<boolean>(false);
@@ -54,7 +60,7 @@ export default function SingleVenuePage(): React.ReactElement {
   const handleOpenBookings = () => {
     setOpenBookings(true);
   };
-  
+
   const handleCloseBookings = () => {
     setOpenBookings(false);
   };
@@ -69,10 +75,10 @@ export default function SingleVenuePage(): React.ReactElement {
   const handleConfirmDelete = async () => {
     try {
       await deleteVenue(venueId!).unwrap();
-      navigate("/venues"); // Navigate to venues list after deletion
+      navigate("/venues");
     } catch (err) {
       console.error("Failed to delete venue:", err);
-      // Optionally, display an error message to the user
+  
     }
   };
 
@@ -137,7 +143,11 @@ export default function SingleVenuePage(): React.ReactElement {
               <Button
                 component={Link}
                 to="/venues"
-                sx={{ borderColor: "secondary.main", color: "secondary.light", textDecoration: "underline" }}
+                sx={{
+                  borderColor: "secondary.main",
+                  color: "secondary.light",
+                  textDecoration: "underline",
+                }}
               >
                 Go back
               </Button>
@@ -146,9 +156,12 @@ export default function SingleVenuePage(): React.ReactElement {
                   <Button
                     variant="outlined"
                     onClick={handleOpenBookings}
-                    sx={{ borderColor: "secondary.main", color: "secondary.light" }}
+                    sx={{
+                      borderColor: "secondary.main",
+                      color: "secondary.light",
+                    }}
                   >
-                  Bookings
+                    Bookings
                   </Button>
                   <Button
                     variant="contained"
@@ -231,7 +244,9 @@ export default function SingleVenuePage(): React.ReactElement {
             onClose={handleCloseDeleteDialog}
             aria-labelledby="delete-venue-dialog-title"
           >
-            <DialogTitle id="delete-venue-dialog-title">Delete Venue</DialogTitle>
+            <DialogTitle id="delete-venue-dialog-title">
+              Delete Venue
+            </DialogTitle>
             <DialogContent>
               <Typography>
                 Are you sure you want to delete <strong>{data.name}</strong>?
@@ -252,7 +267,12 @@ export default function SingleVenuePage(): React.ReactElement {
             </DialogActions>
           </Dialog>
           {isOwnVenue && (
-            <Dialog open={openBookings} onClose={handleCloseBookings} fullWidth maxWidth="sm">
+            <Dialog
+              open={openBookings}
+              onClose={handleCloseBookings}
+              fullWidth
+              maxWidth="sm"
+            >
               <DialogTitle>All Bookings for This Venue</DialogTitle>
               <DialogContent dividers>
                 {data.bookings && data.bookings.length > 0 ? (
@@ -260,8 +280,10 @@ export default function SingleVenuePage(): React.ReactElement {
                     {data.bookings.map((booking: Booking) => (
                       <ListItem key={booking.id} divider>
                         <ListItemText
-                          primary={booking.customer.name} // Adjust based on your data structure
-                          secondary={`${formatDate(booking.dateFrom)} to ${formatDate(booking.dateTo)}`}
+                          primary={booking.customer.name}
+                          secondary={`${formatDate(
+                            booking.dateFrom
+                          )} to ${formatDate(booking.dateTo)}`}
                         />
                       </ListItem>
                     ))}

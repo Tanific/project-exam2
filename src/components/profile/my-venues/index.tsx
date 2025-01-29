@@ -6,28 +6,37 @@ import { Venue } from "../../../types/venue";
 import { VenueListProps } from "../../../types/venue";
 
 export default function VenueList(props: VenueListProps): React.ReactElement {
-  const { venues, cardHeadingLevel = 4 } = props;
-  console.log(venues)
+  const { venues, cardHeadingLevel = 5 } = props;
+  console.log(venues);
 
   return (
     <Box
-      component="ul"
       sx={{
-        listStyleType: "none",
-        padding: 0,
         display: "flex",
+        flexDirection: "row",
         flexWrap: "wrap",
-        gap: 2,
+        gap: 1,
+        justifyContent: "center",
       }}
     >
       {venues.length > 0 ? (
         venues.map((venue: Venue) => (
-          <Box component="li" key={venue.id} sx={{ flex: "1 1 300px" }}>
+          <Box
+            key={venue.id}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: "1 1 300px",
+              alignSelf: "center",
+              maxWidth: "300px",
+              width: "100%",
+            }}
+          >
             <VenueCard cardHeadingLevel={cardHeadingLevel} {...venue} />
           </Box>
         ))
       ) : (
-        <Typography variant="h5" component="p">
+        <Typography variant="h5" component="p" sx={{ color: "white" }}>
           No venues to display
         </Typography>
       )}

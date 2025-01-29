@@ -27,18 +27,19 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
         flexDirection: "column",
         flex: 1,
         justifyContent: "center",
+        height: "100%",
       }}
     >
       <CardMedia
         component="img"
         image={imageUrl}
         alt={name}
-        sx={{ height: 150,
-          aspectRatio: "1/1",
-          objectFit: "cover",
+        sx={{ height: 200, 
+          width: "100%",
+          objectFit: "cover", 
          }}
       />
-      <CardContent>
+      <CardContent sx={{ flex: 1 }}>
         <Typography variant={`h${cardHeadingLevel}`} component={`h${cardHeadingLevel}`}>
           {name}
         </Typography>
@@ -57,7 +58,7 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
               fontSize: { xs: "20px" },
             }}
           />
-          {location.city}, {location.country}
+          {location ? `${location.city}, ${location.country}` : "Location unavailable"}
         </Typography>
       </CardContent>
       <CardContent
