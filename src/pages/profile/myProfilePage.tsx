@@ -35,7 +35,7 @@ export default function MyProfilePage(): React.ReactElement {
   const handleOpen = () => {
     setOpen(true);
   };
-
+ 
   const handleClose = () => {
     setOpen(false);
   };
@@ -139,6 +139,7 @@ export default function MyProfilePage(): React.ReactElement {
               Become Venue Manager
             </Button>
           )}
+          {user?.venueManager === true && (
           <Button
             component={Link}
             to="/venues/create"
@@ -148,6 +149,7 @@ export default function MyProfilePage(): React.ReactElement {
           >
             Create a Venue
           </Button>
+          )}
         </Stack>
       </Box>
       <Typography

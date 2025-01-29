@@ -23,14 +23,7 @@ export default function VenueList(props: VenueListProps): React.ReactElement {
         venues.map((venue: Venue) => (
           <Box
             key={venue.id}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flex: "1 1 300px",
-              alignSelf: "center",
-              maxWidth: "300px",
-              width: "100%",
-            }}
+            sx={{ display: "flex", flexDirection: "column",  flex: "1 1 300px", alignSelf: "center", maxWidth: "300px", width: "100%" }}
           >
             <VenueCard cardHeadingLevel={cardHeadingLevel} {...venue} />
           </Box>

@@ -7,7 +7,6 @@ import {
   Rating,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { VenueLocation, Media } from "../../../types/venue";
 import VenuePlaceholder from '../../../assets/VenuePlaceholder.svg'
 import { VenueCardProps } from "../../../types/venue";
 import { Link } from "react-router-dom";

@@ -46,7 +46,7 @@ export default function MyBookings(
 
   if (!bookings || bookings.length === 0) {
     return (
-      <Typography sx={{ color: "white" }}>No bookings available.</Typography>
+      <Typography sx={{ color: "white", textAlign:"center" }}>No bookings available.</Typography>
     );
   }
 
