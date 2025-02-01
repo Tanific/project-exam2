@@ -1,21 +1,50 @@
 import React, { useEffect } from "react";
-import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useCreateVenueMutation } from "../../api/holidaze";
-import { CreateVenue, UpdateVenue } from "../../types/venue";
+import {
+  useForm,
+  SubmitHandler,
+  Controller,
+  useFieldArray,
+} from "react-hook-form";
 import {
   Box,
+  Typography,
+  TextField,
   Button,
   Checkbox,
   FormControlLabel,
-  TextField,
-  Typography,
   CircularProgress,
 } from "@mui/material";
+import { CreateVenue } from "../../types/venue";
+import { UpdateVenue } from "../../types/venue";
 
-export default function VenueForm(): React.ReactElement {
-  const { control, handleSubmit, reset, formState: { errors } } = useForm<CreateVenue>({
-    defaultValues: {
+interface CreateVenueFormProps {
+  onSubmit: SubmitHandler<CreateVenue>;
+  initialValues?: CreateVenue;
+  mode: "create";
+  isLoading?: boolean;
+}
+
+interface UpdateVenueFormProps {
+  onSubmit: SubmitHandler<UpdateVenue>;
+  initialValues: CreateVenue;
+  mode: "update";
+  isLoading?: boolean;
+}
+export type VenueFormProps = CreateVenueFormProps | UpdateVenueFormProps;
+
+export default function VenueForm({
+  onSubmit,
+  initialValues,
+  isLoading = false,
+  mode,
+}: VenueFormProps): React.ReactElement {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateVenue>({
+    defaultValues: initialValues || {
       name: "",
       description: "",
       price: 0,
@@ -40,40 +69,34 @@ export default function VenueForm(): React.ReactElement {
     },
   });
 
-  const [createVenue, { isLoading, isError, error }] = useCreateVenueMutation();
-  const navigate = useNavigate();
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "media",
   });
 
-  const onSubmit: SubmitHandler<CreateVenue> = async (formData) => {
-    try {
-      await createVenue(formData).unwrap();
-      reset();
-      navigate("/venues");
-    } catch (err) {
-      console.error("Failed to create venue:", err);
+  useEffect(() => {
+    if (initialValues) {
+      reset(initialValues);
     }
-  };
+  }, [initialValues, reset]);
 
   return (
-    <Box maxWidth="md" sx={{ mt: 4, backgroundColor: "background.paper", p: 4 }}>
+    <Box
+      maxWidth="md"
+      sx={{ mt: 4, backgroundColor: "background.paper", p: 4 }}
+    >
       <Typography variant="h4" component="h1" gutterBottom>
-        Create Venue
+        {mode === "create" ? "Create Venue" : "Edit Venue"}
       </Typography>
 
       <Box
         component="form"
-        onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-        }}
+        onSubmit={handleSubmit(
+          onSubmit as SubmitHandler<CreateVenue | UpdateVenue>
+        )}
+        sx={{ display: "flex", flexDirection: "column", gap: 3 }}
       >
-        {/* Name */}
+        {/* Venue Name */}
         <Controller
           name="name"
           control={control}
@@ -170,7 +193,7 @@ export default function VenueForm(): React.ReactElement {
               {...field}
               label="Rating"
               type="number"
-              inputProps={{ min: 0, max: 5 }}
+              slotProps={{ htmlInput: { min: 0, max: 5 } }}
               helperText="Optional (0-5)"
               fullWidth
               onChange={(e) => {
@@ -181,7 +204,7 @@ export default function VenueForm(): React.ReactElement {
           )}
         />
 
-        {/* Media */}
+        {/* Media Section */}
         <Typography variant="h6">Media</Typography>
         {fields.map((item, index) => (
           <Box
@@ -189,18 +212,20 @@ export default function VenueForm(): React.ReactElement {
             sx={{
               display: "flex",
               gap: 2,
-              flexDirection: { xs: "column", sm: "row" },
               alignItems: "center",
+              flexDirection: { xs: "column", sm: "row" },
             }}
           >
             <Controller
               name={`media.${index}.url`}
               control={control}
+              rules={{ required: "Media URL is required" }}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label={`Media URL ${index + 1}`}
-                  type="url"
+                  label="URL"
+                  error={!!errors.media?.[index]?.url}
+                  helperText={errors.media?.[index]?.url?.message}
                   fullWidth
                 />
               )}
@@ -212,20 +237,19 @@ export default function VenueForm(): React.ReactElement {
                 <TextField
                   {...field}
                   label="Alt Text"
-                  placeholder="Image description"
+                  error={!!errors.media?.[index]?.alt}
+                  helperText={errors.media?.[index]?.alt?.message}
                   fullWidth
                 />
               )}
             />
-            {fields.length > 1 && (
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={() => remove(index)}
-              >
-                Remove
-              </Button>
-            )}
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => remove(index)}
+            >
+              Remove
+            </Button>
           </Box>
         ))}
         <Button variant="outlined" onClick={() => append({ url: "", alt: "" })}>
@@ -246,7 +270,13 @@ export default function VenueForm(): React.ReactElement {
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                control={<Checkbox {...field} checked={field.value} />}
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
                 label="WiFi"
               />
             )}
@@ -256,7 +286,13 @@ export default function VenueForm(): React.ReactElement {
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                control={<Checkbox {...field} checked={field.value} />}
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
                 label="Parking"
               />
             )}
@@ -266,7 +302,13 @@ export default function VenueForm(): React.ReactElement {
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                control={<Checkbox {...field} checked={field.value} />}
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
                 label="Breakfast"
               />
             )}
@@ -276,7 +318,13 @@ export default function VenueForm(): React.ReactElement {
             control={control}
             render={({ field }) => (
               <FormControlLabel
-                control={<Checkbox {...field} checked={field.value} />}
+                control={
+                  <Checkbox
+                    {...field}
+                    checked={!!field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
                 label="Pets"
               />
             )}
@@ -304,15 +352,6 @@ export default function VenueForm(): React.ReactElement {
               />
             )}
           />
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            flexDirection: { xs: "column", sm: "row" },
-          }}
-        >
           <Controller
             name="location.city"
             control={control}
@@ -325,46 +364,7 @@ export default function VenueForm(): React.ReactElement {
               />
             )}
           />
-          <Controller
-            name="location.zip"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Zip Code"
-                type="text"
-                fullWidth
-                placeholder="12345"
-              />
-            )}
-          />
         </Box>
-
-        <Controller
-          name="location.country"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Country"
-              fullWidth
-              placeholder="Country Name"
-            />
-          )}
-        />
-        <Controller
-          name="location.continent"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Continent"
-              fullWidth
-              placeholder="Continent Name"
-            />
-          )}
-        />
-
         <Box
           sx={{
             display: "flex",
@@ -372,6 +372,42 @@ export default function VenueForm(): React.ReactElement {
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
+          <Controller
+            name="location.zip"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="ZIP"
+                fullWidth
+                placeholder="ZIP Code"
+              />
+            )}
+          />
+          <Controller
+            name="location.country"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Country"
+                fullWidth
+                placeholder="Country Name"
+              />
+            )}
+          />
+          <Controller
+            name="location.continent"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Continent"
+                fullWidth
+                placeholder="Continent Name"
+              />
+            )}
+          />
           <Controller
             name="location.lat"
             control={control}
@@ -381,7 +417,10 @@ export default function VenueForm(): React.ReactElement {
                 label="Latitude"
                 type="number"
                 fullWidth
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value === "" ? "" : Number(value));
+                }}
               />
             )}
           />
@@ -394,39 +433,35 @@ export default function VenueForm(): React.ReactElement {
                 label="Longitude"
                 type="number"
                 fullWidth
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value === "" ? "" : Number(value));
+                }}
               />
             )}
           />
         </Box>
 
-        {/* Submit and Cancel Buttons */}
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isLoading}
-            sx={{ mt: 2 }}
-          >
-            {isLoading ? <CircularProgress size={24} /> : "Create Venue"}
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => reset()}
-            disabled={isLoading}
-            sx={{ mt: 2 }}
-          >
-            Cancel
-          </Button>
-        </Box>
-
-        {/* Error Handling */}
-        {isError && (
-          <Typography color="error">
-            {String(error) || "An error occurred while creating the venue."}
-          </Typography>
-        )}
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={isLoading}
+          sx={{
+            alignSelf: "flex-start",
+            backgroundColor: "#42B34E",
+            color: "black",
+            mt: 2,
+          }}
+        >
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : mode === "create" ? (
+            "Create Venue"
+          ) : (
+            "Update Venue"
+          )}
+        </Button>
       </Box>
     </Box>
   );

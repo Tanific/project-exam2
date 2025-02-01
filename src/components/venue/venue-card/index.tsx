@@ -22,6 +22,7 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
       to={`/venues/${id}`}
       sx={{
         maxWidth: 345,
+        minWidth: "100%",
         display: "flex",
         flexDirection: "column",
         flex: 1,
@@ -39,7 +40,7 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
          }}
       />
       <CardContent sx={{ flex: 1 }}>
-        <Typography variant={`h${cardHeadingLevel}`} component={`h${cardHeadingLevel}`}>
+        <Typography noWrap variant={`h${cardHeadingLevel}`} component={`h${cardHeadingLevel}`}>
           {name}
         </Typography>
         <Typography
@@ -70,7 +71,6 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
         }}
       >
         <Rating value={rating} readOnly sx={{ color: "secondary.main" }} />
-        <div style={{ display: "flex", alignItems: "center" }}>
           <Typography
             color="primary.dark"
             sx={{
@@ -96,7 +96,6 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
           >
             /night
           </Typography>
-        </div>
       </CardContent>
     </Card>
   );

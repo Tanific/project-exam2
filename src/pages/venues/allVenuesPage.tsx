@@ -58,17 +58,11 @@ export default function VenuesPage(): React.ReactElement {
         />
       </Box>
       <Box sx={{ marginTop: 6 }}>
-        <Typography
-          variant="h4"
-          component="h3"
-          gutterBottom
-          sx={{ textAlign: "center", color: "text.primary" }}
-        ></Typography>
         <Box
           sx={{
             display: "flex",
-            flexWrap: "wrap",
             gap: 2,
+            flexWrap: "wrap",
             justifyContent: "center",
             maxWidth: 1400,
             margin: "0 auto",
@@ -76,7 +70,7 @@ export default function VenuesPage(): React.ReactElement {
         >
           {Array.isArray(filteredData) &&
             filteredData.slice(0, visibleCount).map((venue) => (
-              <Box key={venue.id} sx={{ flex: "1 1 300px", maxWidth: "345px", display: "flex", flexDirection: "column" }}>
+              <Box key={venue.id} sx={{ maxWidth: 300, width: "100%" }}>
                 <VenueCard {...venue} />
               </Box>
             ))}
@@ -86,7 +80,7 @@ export default function VenuesPage(): React.ReactElement {
             <Button
               variant="contained"
               onClick={loadMore}
-              sx={{ backgroundColor: "secondary.main" }}
+              sx={{ backgroundColor: "secondary.detail" }}
             >
               Load More
             </Button>

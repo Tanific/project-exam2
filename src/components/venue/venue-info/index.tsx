@@ -25,10 +25,9 @@ export default function VenueInfo(props: VenueInfoProps): React.ReactElement {
           size="large"
           value={rating}
           readOnly
-          sx={{ color: "secondary.main" }}
-          emptyIcon={<StarBorderIcon style={{ color: "white", fontSize:"inherit" }} />}
+          sx={{ color: "gold" }}
+          emptyIcon={<StarBorderIcon style={{ color: "gold", fontSize:"inherit", fontWeight:"lighter" }} />}
         />
-        <Typography>{rating}</Typography>
       </Stack>
       <Stack spacing={3} direction={"row"}>
         <Tooltip title={`Maximum ${maxGuests} guests`}>

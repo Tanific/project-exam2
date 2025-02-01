@@ -15,7 +15,7 @@ export interface BookingBase {
 
 export interface BookingCalendarProps {
   bookings: Booking[];
-  maxGuests: number;
+  maxGuests?: number;
   venueId: string;
   enableBooking?: boolean;
 }

@@ -13,8 +13,6 @@ import {
   Box,
   CircularProgress,
   Container,
-  IconButton,
-  Tooltip,
   Typography,
   Button,
   List,
@@ -78,7 +76,6 @@ export default function SingleVenuePage(): React.ReactElement {
       navigate("/venues");
     } catch (err) {
       console.error("Failed to delete venue:", err);
-  
     }
   };
 
@@ -112,6 +109,7 @@ export default function SingleVenuePage(): React.ReactElement {
         </Box>
       ) : data != null ? (
         <Container
+          maxWidth="lg"
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -120,105 +118,124 @@ export default function SingleVenuePage(): React.ReactElement {
             flexDirection: "column",
             flex: 1,
             alignItems: "center",
+            overflow: "hidden",
+            color: "white",
           }}
         >
           <Box
             sx={{
+              marginTop: 2,
+              paddingX: 2,
+              display: "flex",
               alignItems: "center",
-              maxWidth: "md",
-              color: "white",
-              padding: 2,
+              gap: 3,
+              flexDirection: "column",
             }}
           >
+            <Button
+              component={Link}
+              to="/venues"
+              sx={{
+                color: "white",
+                textDecoration: "underline",
+                mt: 3,
+              }}
+            >
+              Go back
+            </Button>
+            {isOwnVenue && (
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  textAlign: "center",
+                  flex: 1,
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={handleOpenBookings}
+                  sx={{
+                    backgroundColor: "grey.800",
+                    color: "white",
+                  }}
+                >
+                  View Bookings
+                </Button>
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to={`/venues/edit/${venueId}`}
+                  sx={{ backgroundColor: "secondary.main", color: "white" }}
+                  startIcon={<EditIcon />}
+                >
+                  Edit Venue
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={handleOpenDeleteDialog}
+                >
+                  Delete Venue
+                </Button>
+              </Box>
+            )}
             <Box
               sx={{
-                marginTop: 2,
-                paddingX: 2,
+                marginBlock: 1,
+                textAlign: "center",
                 display: "flex",
-                justifyContent: "space-between",
-                gap: 3,
+                alignItems: "center",
+                flexDirection: "column",
                 flexWrap: "wrap",
               }}
             >
-              <Button
-                component={Link}
-                to="/venues"
+              <Typography
+                component="h2"
+                variant="h3"
+                noWrap
                 sx={{
-                  borderColor: "secondary.main",
-                  color: "secondary.light",
-                  textDecoration: "underline",
+                  display: "inline-block",
+                  margin: 1,
+                  fontWeight: "bold",
+                  maxWidth: "75vw",
                 }}
               >
-                Go back
-              </Button>
-              {isOwnVenue && (
-                <>
-                  <Button
-                    variant="outlined"
-                    onClick={handleOpenBookings}
-                    sx={{
-                      borderColor: "secondary.main",
-                      color: "secondary.light",
-                    }}
-                  >
-                    Bookings
-                  </Button>
-                  <Button
-                    variant="contained"
-                    component={Link}
-                    to={`/venues/edit/${venueId}`}
-                    sx={{ backgroundColor: "secondary.main", color: "white" }}
-                  >
-                    Edit Venue
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                    onClick={handleOpenDeleteDialog}
-                  >
-                    Delete Venue
-                  </Button>
-                </>
-              )}
-            </Box>
-
-            <Box
-              sx={{
-                flex: 1,
-                padding: 2,
-                borderRadius: 1,
-                marginTop: 2,
-                textAlign: "center",
-              }}
-            >
-              <Box sx={{ marginBlock: 1 }}>
-                <Typography
-                  component="h1"
-                  variant="h2"
-                  sx={{
-                    fontSize: {
-                      xs: "2rem",
-                      sm: "2.4rem",
-                      md: "2.8rem",
-                      lg: "3.5rem",
-                    },
-                  }}
-                >
-                  {data.name}
-                  {isOwnVenue && (
-                    <Tooltip title="Edit venue">
-                      <IconButton
-                        aria-label="edit venue"
-                        component={Link}
-                        to={`/venues/edit/${data.id}/`}
-                      >
-                        <EditIcon color="primary" />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Typography>
-              </Box>
+                {data.name}
+              </Typography>
+              <Typography
+                component="h3"
+                variant="h6"
+                
+                sx={{ margin: 1, fontStyle: "italic", fontWeight: "light", maxWidth: "75vw" }}
+              >
+                {data.description}
+              </Typography>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{ margin: 1, fontWeight: "light", color: "#8E00E0" }}
+              >
+                <span style={{ fontWeight: "bold", fontSize: "larger" }}>
+                  {data.price}
+                </span>{" "}
+                kr / night
+              </Typography>
+              <Typography
+                variant="h6"
+                component="h2"
+                noWrap
+                sx={{ margin: 1, fontWeight: "light", maxWidth: "75vw" }}
+              >
+                {data.location &&
+                data.location.city?.trim() &&
+                data.location.country?.trim()
+                  ? `${data.location.city}, ${data.location.country}`
+                  : "Location not found"}
+              </Typography>
               <VenueInfo
                 wifi={data.meta?.wifi}
                 pets={data.meta?.pets}
@@ -227,7 +244,6 @@ export default function SingleVenuePage(): React.ReactElement {
                 parking={data.meta?.parking}
                 maxGuests={data.maxGuests}
               />
-
               <VenueGallery images={data.media as VenueGalleryProps[]} />
             </Box>
             <Box sx={{ padding: 1, marginBlock: 1 }}>
@@ -239,11 +255,7 @@ export default function SingleVenuePage(): React.ReactElement {
               />
             </Box>
           </Box>
-          <Dialog
-            open={openDeleteDialog}
-            onClose={handleCloseDeleteDialog}
-            aria-labelledby="delete-venue-dialog-title"
-          >
+          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
             <DialogTitle id="delete-venue-dialog-title">
               Delete Venue
             </DialogTitle>

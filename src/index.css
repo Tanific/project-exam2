@@ -35,7 +35,7 @@ a {
 .react-aria-RangeCalendar {
   --text-color: rgb(255, 255, 255);
   --text-color-disabled: rgb(104, 104, 104);
-  --text-color-unavailable: rgb(193, 13, 13);
+  --text-color-unavailable: rgb(228, 42, 42);
   --background-color: rgb(23, 23, 23);
   --highlight-background: rgb(142, 0, 224);
   --highlight-foreground: rgb(225, 225, 225);

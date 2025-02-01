@@ -10,7 +10,6 @@ import { becomeVenueManager as updateVenueManagerStatus } from "../../slice/user
 import UpdateAvatar from "../../components/profile/update-avatar";
 import MyBookings from "../../components/profile/my-bookings";
 import VenueList from "../../components/profile/my-venues";
-
 import {
   Avatar,
   Container,

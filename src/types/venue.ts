@@ -11,11 +11,6 @@ export interface Media {
   alt: string;
 }
 
-export interface VenueGalleryProps {
-  url: string;
-  alt: string;
-}
-
 export interface ImageGallery {
   images: VenueGalleryProps[];
 }
@@ -41,37 +36,29 @@ export interface CreateVenue {
   name: string;
   description: string;
   media?: Media[];
-  price: number;
-  maxGuests: number;
+  price?: number;
+  maxGuests?: number;
   rating?: 0 | 1 | 2 | 3 | 4 | 5;
-  meta?: VenueMeta;
+  meta: VenueMeta;
   location?: VenueLocation;
 }
 
 export interface UpdateVenue {
   venueId: string;
-  body: {
-    name: string;
-    description: string;
-    media?: Media[];
-    price: number;
-    maxGuests: number;
-    rating: 0 | 1 | 2 | 3 | 4 | 5;
-    meta: VenueMeta;
-    location?: VenueLocation;
-  };
+  body: CreateVenue;
 }
 
 export interface VenueListProps {
   venues: Venue[];
   cardHeadingLevel?: 2 | 3 | 4 | 5 | 6;
+  venueManager?: boolean;
 }
 
 export interface VenueCardProps {
   id: string;
   name: string;
   media?: Media[];
-  price: number;
+  price?: number;
   location?: VenueLocation;
   rating?: 0 | 1 | 2 | 3 | 4 | 5;
   cardHeadingLevel?: 2 | 3 | 4 | 5 | 6;

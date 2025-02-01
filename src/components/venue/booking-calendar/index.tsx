@@ -16,21 +16,39 @@ import {
   TextField,
   Typography,
   useMediaQuery,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Button as MuiButton,
 } from "@mui/material";
 import { useCreateBookingMutation } from "../../../api/holidaze";
 import { BookingCalendarProps } from "../../../types/booking";
+import { formatDateWithSuffix } from "../../utils/formatDate";
 
 export default function BookingCalendar(
   props: BookingCalendarProps
 ): React.ReactElement {
   const { bookings, maxGuests = 100, venueId, enableBooking = false } = props;
-  const [guestsError, setGuestsError] = useState<string>("");
   const [createBooking] = useCreateBookingMutation();
   const [guests, setGuests] = useState<number>(1);
   const [bookingError, setBookingError] = useState<string>("");
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(width < 900px)");
+  const [openBookingDialog, setOpenBookingDialog] = useState(false);
+
+  const handleOpenBookingDialog = () => {
+    if (guests < 1 || guests > maxGuests) {
+      setBookingError(`Number of guests must be between 1 and ${maxGuests}.`);
+      return;
+    }
+    setOpenBookingDialog(true);
+  };
+
+  const handleCloseBookingDialog = () => {
+    setOpenBookingDialog(false);
+  };
 
   const [dates, setDates] = useState({
     start: today(getLocalTimeZone()),
@@ -51,10 +69,10 @@ export default function BookingCalendar(
 
     try {
       await createBooking({ dateTo, dateFrom, guests, venueId }).unwrap();
-      /*navigate("/profile");*/
+      navigate("/profile");
+      window.location.reload();
     } catch (error) {
-      const errorMessage =
-      error?.data?.errors?.[0]?.message
+      const errorMessage = error?.data?.errors?.[0]?.message;
       console.error("Booking failed:", errorMessage);
       setBookingError(errorMessage);
     }
@@ -121,13 +139,6 @@ export default function BookingCalendar(
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const value = e.target.valueAsNumber;
               setGuests(value);
-              if (value >= 1 && value <= maxGuests) {
-                setGuestsError(""); // Clear error when valid
-              } else {
-                setGuestsError(
-                  `Number of guests must be between 1 and ${maxGuests}.` // Set appropriate error message
-                );
-              }
             }}
             slotProps={{
               htmlInput: {
@@ -147,16 +158,28 @@ export default function BookingCalendar(
           />
           <MuiButton
             variant="contained"
-            onClick={handleBooking}
-            sx={{
-              marginBlock: 2,
-              backgroundColor: "secondary.detail",
-              color: "white",
-            }}
+            onClick={handleOpenBookingDialog}
+            sx={{ backgroundColor: "secondary.detail" }}
           >
             Book Venue
           </MuiButton>
-          
+          <Dialog open={openBookingDialog} onClose={handleCloseBookingDialog}>
+            <DialogTitle>Confirm Booking</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Book this venue from{" "}
+                {formatDateWithSuffix(new Date(dates.start.toString()))} to{" "}
+                {formatDateWithSuffix(new Date(dates.end.toString()))} for{" "}
+                {guests} guests?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <MuiButton onClick={handleCloseBookingDialog}>Cancel</MuiButton>
+              <MuiButton onClick={handleBooking} color="primary">
+                Confirm
+              </MuiButton>
+            </DialogActions>
+          </Dialog>
         </Stack>
       ) : (
         <Typography
