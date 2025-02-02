@@ -5,7 +5,7 @@ This is my submission for Noroff FED2 - Project Exam2.
 
 ### Tech stack
 - **Typescript** as the programming language
-- **React** - frontend framework
+- **React** - javascript framework
 - **MUI** - styling framework
 - **Redux Toolkit** for state management and data fetching
 - **Prettier**
