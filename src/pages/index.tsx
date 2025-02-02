@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
 export default function HomePage(): React.ReactElement {
-  const { data, isLoading } = useGetTrendingVenuesQuery();
+  const { data, error, isLoading } = useGetTrendingVenuesQuery();
   console.log(data);
 
   return (
@@ -16,9 +16,8 @@ export default function HomePage(): React.ReactElement {
       disableGutters
       sx={{
         background: "linear-gradient(180deg, #262626 0%,rgb(10, 17, 35) 120%)",
-        minWidth: "100vw",
-        overflow: "hidden",
         padding: 0,
+        maxWidth: "100%",
       }}
     >
       <Box
@@ -104,7 +103,6 @@ export default function HomePage(): React.ReactElement {
       />
       <Box
         sx={{
-          minWidth: "100vw",
           display: "flex",
           flexDirection: "column",
           flex: 1,
