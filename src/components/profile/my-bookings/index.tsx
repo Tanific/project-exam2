@@ -12,7 +12,6 @@ import {
   Tooltip,
   Typography,
   Alert,
-  Divider,
 } from "@mui/material";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -95,7 +94,7 @@ export default function MyBookings(
                 <Avatar>
                   <img
                     src={booking.venue.media?.[0]?.url || Placeholder}
-                    alt={`${booking.venue.name} Image`}
+                    alt={`${booking.venue.name}`}
                     style={{
                       width: 70,
                       height: 70,

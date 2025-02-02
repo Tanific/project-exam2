@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 export default function VenuesPage(): React.ReactElement {
-  const { data, error, isLoading } = useGetVenuesQuery();
+  const { data, isLoading } = useGetVenuesQuery();
   const [visibleCount, setVisibleCount] = React.useState(12);
   const [searchInput, setSearchInput] = React.useState("");
   const [filters, setFilters] = React.useState({

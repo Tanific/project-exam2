@@ -1,6 +1,6 @@
 import * as React from "react";
 import { VenueInfoProps } from "../../../types/venue";
-import { Badge, Rating, Stack, Tooltip, Typography } from "@mui/material";
+import { Badge, Rating, Stack, Tooltip } from "@mui/material";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import WifiOutlinedIcon from "@mui/icons-material/WifiOutlined";
 import PetsOutlinedIcon from "@mui/icons-material/PetsOutlined";

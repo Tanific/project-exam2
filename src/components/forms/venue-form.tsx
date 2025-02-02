@@ -43,7 +43,6 @@ export default function VenueForm({
     control,
     handleSubmit,
     reset,
-    setError,
     formState: { errors },
   } = useForm<CreateVenue>({
     defaultValues: initialValues || {

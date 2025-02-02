@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
 export default function HomePage(): React.ReactElement {
-  const { data, error, isLoading } = useGetTrendingVenuesQuery();
+  const { data, isLoading } = useGetTrendingVenuesQuery();
   console.log(data);
 
   return (
