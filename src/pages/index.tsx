@@ -8,7 +8,6 @@ import { CircularProgress } from "@mui/material";
 
 export default function HomePage(): React.ReactElement {
   const { data, isLoading } = useGetTrendingVenuesQuery();
-  console.log(data);
 
   return (
     <Container

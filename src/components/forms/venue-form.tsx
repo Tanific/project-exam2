@@ -138,7 +138,7 @@ export default function VenueForm({
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Price*"
+                label="Price per night*"
                 type="number"
                 error={!!errors.price}
                 helperText={errors.price?.message}

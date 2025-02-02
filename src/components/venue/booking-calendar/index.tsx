@@ -178,7 +178,7 @@ export default function BookingCalendar(
             <MuiButton
               variant="contained"
               onClick={handleOpenBookingDialog}
-              sx={{ backgroundColor: "secondary.detail" }}
+              sx={{ backgroundColor: "secondary.detail", color: "black" }}
             >
               Book Venue
             </MuiButton>

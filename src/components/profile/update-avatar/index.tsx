@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Alert,
 } from "@mui/material";
 
 export default function UpdateAvatar(
@@ -17,6 +18,8 @@ export default function UpdateAvatar(
 ): React.ReactElement {
   const { handleClose, open, name } = props;
   const [avatar, setAvatar] = React.useState<string>("");
+  const [errorMessage, setErrorMessage] = React.useState("");
+
   const [updateUserAvatar] = useUpdateUserAvatarMutation();
   const dispatch = useDispatch();
 
@@ -25,11 +28,13 @@ export default function UpdateAvatar(
       const body = { avatar: { url: avatar, alt: "" } };
       await updateUserAvatar({ name, body }).unwrap();
       dispatch(updateAvatar({ url: avatar, alt: "" }));
+      setAvatar("");
+      setErrorMessage("");
+      handleClose();
     } catch (error) {
-      console.error("Failed to update avatar:", error);
+      setErrorMessage(error.data.errors[0].message);
+      console.error(error);
     }
-    handleClose();
-    setAvatar("");
   };
 
   return (
@@ -47,6 +52,11 @@ export default function UpdateAvatar(
             },
           }}
         />
+        {errorMessage && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {errorMessage}
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>

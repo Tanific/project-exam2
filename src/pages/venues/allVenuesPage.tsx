@@ -52,7 +52,6 @@ export default function VenuesPage(): React.ReactElement {
     return matchesSearch && matchesFilters;
   });
 
-  console.log("Filtered Data:", filteredData);
   return (
     <Container
       sx={{

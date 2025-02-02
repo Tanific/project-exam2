@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 export default function RegisterForm(): React.ReactElement {
   const navigate = useNavigate();
   const [register, { isLoading, isError }] = useRegisterMutation();
-
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -15,9 +14,8 @@ export default function RegisterForm(): React.ReactElement {
 
   const handleRegister = async () => {
     try {
-      const result = await register({ name, email, password }).unwrap();
+      await register({ name, email, password }).unwrap();
       navigate("/login");
-      console.log(result);
     } catch (error) {
       const errorMessage = (error as any)?.data?.errors?.[0]?.message;
       console.error(error);

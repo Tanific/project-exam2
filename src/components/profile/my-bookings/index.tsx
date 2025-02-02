@@ -91,13 +91,13 @@ export default function MyBookings(
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <ListItemAvatar>
-                <Avatar>
+                <Avatar sx={{ minWidth: "70px", height: "70px" }}>
                   <img
                     src={booking.venue.media?.[0]?.url || Placeholder}
                     alt={`${booking.venue.name}`}
                     style={{
-                      width: 70,
-                      height: 70,
+                      width: "70px",
+                      height: "70px",
                       objectFit: "cover",
                       borderRadius: "50%",
                     }}
@@ -113,6 +113,7 @@ export default function MyBookings(
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      fontWeight: "bold",
                     },
                   },
                   secondary: {
@@ -154,7 +155,8 @@ export default function MyBookings(
               }}
             >
               <Button
-                sx={{ color: "white", textDecoration: "underline" }}
+                sx={{ color: "white", borderColor: "secondary.dark" }}
+                variant="outlined"
                 component={Link}
                 to={`/venues/${booking.venue.id}`}
               >

@@ -52,8 +52,6 @@ export default function SingleVenuePage(): React.ReactElement {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  console.log(data);
-
   if (error != null) console.error(error);
   const handleOpenBookings = () => {
     setOpenBookings(true);
@@ -75,7 +73,7 @@ export default function SingleVenuePage(): React.ReactElement {
       await deleteVenue(venueId!).unwrap();
       navigate("/venues");
     } catch (err) {
-      console.error("Failed to delete venue:", err);
+      console.error(err);
     }
   };
 
@@ -168,7 +166,7 @@ export default function SingleVenuePage(): React.ReactElement {
                   variant="contained"
                   component={Link}
                   to={`/venues/edit/${venueId}`}
-                  sx={{ backgroundColor: "secondary.main", color: "white" }}
+                  sx={{ backgroundColor: "secondary.main", color: "white", fontWeight: "bold" }}
                   startIcon={<EditIcon />}
                 >
                   Edit Venue
@@ -285,7 +283,7 @@ export default function SingleVenuePage(): React.ReactElement {
               fullWidth
               maxWidth="sm"
             >
-              <DialogTitle>All Bookings for This Venue</DialogTitle>
+              <DialogTitle>All Bookings</DialogTitle>
               <DialogContent dividers>
                 {data.bookings && data.bookings.length > 0 ? (
                   <List>
@@ -301,7 +299,7 @@ export default function SingleVenuePage(): React.ReactElement {
                     ))}
                   </List>
                 ) : (
-                  <Typography>No bookings available for this venue.</Typography>
+                  <Typography>No bookings for this venue yet.</Typography>
                 )}
               </DialogContent>
               <DialogActions>

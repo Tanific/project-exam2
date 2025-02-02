@@ -24,7 +24,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function MyProfilePage(): React.ReactElement {  
+export default function MyProfilePage(): React.ReactElement {
   const [open, setOpen] = React.useState<boolean>(false);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
@@ -35,7 +35,7 @@ export default function MyProfilePage(): React.ReactElement {
   const handleOpen = () => {
     setOpen(true);
   };
- 
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -49,11 +49,6 @@ export default function MyProfilePage(): React.ReactElement {
   if (isError) {
     console.error(error);
   }
-  if (data) {
-    console.log(data);
-  }
-
-
   const handleBecomeVenueManager = async () => {
     try {
       await becomeVenueManager(user?.name).unwrap();
@@ -75,7 +70,6 @@ export default function MyProfilePage(): React.ReactElement {
         backgroundColor: "primary.main",
       }}
     >
-  
       <Box
         sx={{
           display: "flex",
@@ -136,26 +130,25 @@ export default function MyProfilePage(): React.ReactElement {
             </Button>
           )}
           {user?.venueManager === true && (
-          <Button
-            component={Link}
-            to="/venues/create"
-            variant="contained"
-            style={{ backgroundColor: "#42B34E", color: "black" }}
-            startIcon={<AddIcon />}
-          >
-            Create a Venue
-          </Button>
+            <Button
+              component={Link}
+              to="/venues/create"
+              variant="contained"
+              style={{ backgroundColor: "#42B34E", color: "black" }}
+              startIcon={<AddIcon />}
+            >
+              Create a Venue
+            </Button>
           )}
         </Stack>
-        
       </Box>
-      <Divider 
-        variant="middle" 
-        sx={{ 
-          borderColor: "#545454", 
-          width: "50%", 
-          margin: "0 auto" 
-        }} 
+      <Divider
+        variant="middle"
+        sx={{
+          borderColor: "#545454",
+          width: "50%",
+          margin: "0 auto",
+        }}
       />
       <Typography
         variant="h4"
@@ -168,13 +161,13 @@ export default function MyProfilePage(): React.ReactElement {
       ) : (
         <MyBookings bookings={data?.bookings || []} />
       )}
-      <Divider 
-        variant="middle" 
-        sx={{ 
-          borderColor: "#545454", 
-          width: "50%", 
-          margin: "0 auto"
-        }} 
+      <Divider
+        variant="middle"
+        sx={{
+          borderColor: "#545454",
+          width: "50%",
+          margin: "0 auto",
+        }}
       />
       <Typography
         variant="h4"
