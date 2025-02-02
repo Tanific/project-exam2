@@ -1,7 +1,7 @@
 import * as React from "react";
-import Navigation from "../../components/layout/header/navigation";
 import LoginForm from "../../components/forms/login-form";
-import { Box, Container, Paper, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
+import backgroundImage from "../../assets/login.png";
 
 export default function LoginPage(): React.ReactElement {
   return (
@@ -10,6 +10,9 @@ export default function LoginPage(): React.ReactElement {
         minWidth: "100vw",
         flex: 1,
         alignContent: "center",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
       }}
     >
       <Box sx={{

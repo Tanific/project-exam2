@@ -19,11 +19,13 @@ import {
   CircularProgress,
   Stack,
   Typography,
+  Alert,
+  Divider,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function MyProfilePage(): React.ReactElement {
+export default function MyProfilePage(): React.ReactElement {  
   const [open, setOpen] = React.useState<boolean>(false);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const user = useSelector((state: RootState) => state.user.user);
@@ -52,6 +54,7 @@ export default function MyProfilePage(): React.ReactElement {
     console.log(data);
   }
 
+
   const handleBecomeVenueManager = async () => {
     try {
       await becomeVenueManager(user?.name).unwrap();
@@ -60,12 +63,6 @@ export default function MyProfilePage(): React.ReactElement {
       console.error("Failed to become venue manager:", error);
     }
   };
-
-  /* React.useEffect(() => {
-    if (user?.avatar != null) {
-      dispatch(updateAvatar(user?.avatar));
-    }
-  }, []);*/
 
   return (
     <Container
@@ -79,6 +76,7 @@ export default function MyProfilePage(): React.ReactElement {
         backgroundColor: "primary.main",
       }}
     >
+  
       <Box
         sx={{
           display: "flex",
@@ -150,7 +148,16 @@ export default function MyProfilePage(): React.ReactElement {
           </Button>
           )}
         </Stack>
+        
       </Box>
+      <Divider 
+        variant="middle" 
+        sx={{ 
+          borderColor: "#545454", 
+          width: "50%", 
+          margin: "0 auto" 
+        }} 
+      />
       <Typography
         variant="h4"
         sx={{ color: "white", padding: 2, textAlign: "center", margin: 2 }}
@@ -162,6 +169,14 @@ export default function MyProfilePage(): React.ReactElement {
       ) : (
         <MyBookings bookings={data?.bookings || []} />
       )}
+      <Divider 
+        variant="middle" 
+        sx={{ 
+          borderColor: "#545454", 
+          width: "50%", 
+          margin: "0 auto"
+        }} 
+      />
       <Typography
         variant="h4"
         sx={{ color: "white", padding: 2, textAlign: "center" }}

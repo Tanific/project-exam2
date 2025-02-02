@@ -209,7 +209,6 @@ export default function SingleVenuePage(): React.ReactElement {
               <Typography
                 component="h3"
                 variant="h6"
-                
                 sx={{ margin: 1, fontStyle: "italic", fontWeight: "light", maxWidth: "75vw" }}
               >
                 {data.description}
@@ -217,14 +216,25 @@ export default function SingleVenuePage(): React.ReactElement {
               <Typography
                 variant="h6"
                 component="h2"
-                sx={{ margin: 1, fontWeight: "light", color: "#8E00E0" }}
+                sx={{ margin: 1, fontWeight: "light" }}
               >
                 <span style={{ fontWeight: "bold", fontSize: "larger" }}>
                   {data.price}
                 </span>{" "}
                 kr / night
               </Typography>
-              <Typography
+            
+              <VenueInfo
+                wifi={data.meta?.wifi}
+                pets={data.meta?.pets}
+                rating={data.rating}
+                breakfast={data.meta?.breakfast}
+                parking={data.meta?.parking}
+                maxGuests={data.maxGuests}
+              />
+              <VenueGallery images={data.media as VenueGalleryProps[]} />
+            </Box>
+            <Typography
                 variant="h6"
                 component="h2"
                 noWrap
@@ -236,16 +246,6 @@ export default function SingleVenuePage(): React.ReactElement {
                   ? `${data.location.city}, ${data.location.country}`
                   : "Location not found"}
               </Typography>
-              <VenueInfo
-                wifi={data.meta?.wifi}
-                pets={data.meta?.pets}
-                rating={data.rating}
-                breakfast={data.meta?.breakfast}
-                parking={data.meta?.parking}
-                maxGuests={data.maxGuests}
-              />
-              <VenueGallery images={data.media as VenueGalleryProps[]} />
-            </Box>
             <Box sx={{ padding: 1, marginBlock: 1 }}>
               <BookingCalendar
                 bookings={data.bookings}

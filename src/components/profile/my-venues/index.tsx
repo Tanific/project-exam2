@@ -15,21 +15,29 @@ export default function VenueList(props: VenueListProps): React.ReactElement {
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        gap: 1,
+        gap: 2,
         justifyContent: "center",
+        padding: 2,
       }}
     >
       {venues.length > 0 ? (
         venues.map((venue: Venue) => (
           <Box
             key={venue.id}
-            sx={{ display: "flex", flexDirection: "column",  flex: "1 1 300px", alignSelf: "center", maxWidth: "300px", width: "100%" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: "1 1 300px",
+              alignSelf: "center",
+              maxWidth: "300px",
+              width: "100%",
+            }}
           >
             <VenueCard cardHeadingLevel={cardHeadingLevel} {...venue} />
           </Box>
         ))
       ) : (
-        <Typography variant="h5" component="p" sx={{ color: "white" }}>
+        <Typography sx={{ color: "white", textAlign: "center", mb: 2 }}>
           No venues to display
         </Typography>
       )}

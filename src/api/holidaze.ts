@@ -64,7 +64,7 @@ export const holidazeApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["OwnProfile", "VenueList"],
+      invalidatesTags: ["Booking", "OwnProfile", "VenueList", "Venue"],
     }),
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (body) => ({
@@ -92,12 +92,13 @@ export const holidazeApi = createApi({
       transformResponse: (response: { data: LoginResponse }) => response.data,
       invalidatesTags: ["OwnProfile"],
     }),
-    createVenue: builder.mutation<Venue, CreateVenue>({
-      query: (body) => ({
+    createVenue: builder.mutation<VenueDetailed, CreateVenue>({
+      query: (data: CreateVenue) => ({
         url: "holidaze/venues",
         method: "POST",
-        body,
+        body: data,
       }),
+      transformResponse: (response: { data: VenueDetailed }) => response.data,
       invalidatesTags: ["VenueList", "OwnProfile"],
     }),
     updateVenue: builder.mutation<Venue, { venueId: string; body: UpdateVenue }>({
@@ -132,9 +133,10 @@ export const holidazeApi = createApi({
         url: `holidaze/bookings/${bookingId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Booking", "OwnProfile"],
+      invalidatesTags: ["Booking", "OwnProfile", "Venue"],
     }),
   }),
+  
 });
 
 export const {

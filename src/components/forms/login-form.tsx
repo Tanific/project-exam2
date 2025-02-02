@@ -2,12 +2,7 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../api/holidaze";
 import { logIn } from "../../slice/userSlice";
-import {
-  Button,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Button, TextField, Typography, Box } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginForm(): React.ReactElement {
@@ -17,13 +12,17 @@ export default function LoginForm(): React.ReactElement {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const [loginError, setLoginError] = React.useState<string>("");
+
   const handleLogin = async () => {
     try {
       const result = await login({ email, password }).unwrap();
       dispatch(logIn(result));
       navigate("/");
     } catch (error) {
-      console.error("Failed to login:", error);
+      const errorMessage = (error as any)?.data?.errors?.[0]?.message;
+      console.error(error);
+      setLoginError(errorMessage);
     }
   };
 
@@ -41,6 +40,7 @@ export default function LoginForm(): React.ReactElement {
         padding: 2,
         borderRadius: 1,
         boxShadow: 3,
+        backgroundColor: "white",
       }}
       onSubmit={(e) => {
         e.preventDefault();
@@ -58,7 +58,7 @@ export default function LoginForm(): React.ReactElement {
         Login
       </Typography>
       <TextField
-        label="Email"
+        label="Noroff Email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -81,19 +81,26 @@ export default function LoginForm(): React.ReactElement {
       />
       {isError && (
         <Typography color="error" variant="body2">
-          Failed to login. Please check your credentials and try again.
+          {loginError}
         </Typography>
       )}
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         fullWidth
         disabled={isLoading}
+        sx={{
+          backgroundColor: "secondary.main",
+          color: "white",
+        }}
       >
         {isLoading ? "Logging in..." : "Login"}
       </Button>
-      <Button component={Link} to="/register" sx={{ color: "primary.main" }}>
+      <Button
+        component={Link}
+        to="/register"
+        sx={{ color: "secondary.main", textDecoration: "underline" }}
+      >
         Don't have an account? Register here
       </Button>
     </Box>

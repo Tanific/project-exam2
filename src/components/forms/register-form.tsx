@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useDispatch } from "react-redux";
-import { useRegisterMutation } from "../../api/holidaze"; 
+import { useRegisterMutation } from "../../api/holidaze";
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -12,17 +11,21 @@ export default function RegisterForm(): React.ReactElement {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const [registerError, setRegisterError] = React.useState<string>("");
+
   const handleRegister = async () => {
     try {
       const result = await register({ name, email, password }).unwrap();
       navigate("/login");
       console.log(result);
     } catch (error) {
-      console.error("Failed to register:", error);
+      const errorMessage = (error as any)?.data?.errors?.[0]?.message;
+      console.error(error);
+      setRegisterError(errorMessage);
     }
   };
 
-  return ( 
+  return (
     <Box
       component="form"
       sx={{
@@ -36,15 +39,21 @@ export default function RegisterForm(): React.ReactElement {
         padding: 2,
         borderRadius: 1,
         boxShadow: 3,
+        backgroundColor: "white",
       }}
       onSubmit={(e) => {
         e.preventDefault();
         handleRegister();
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom sx={{
-                color: "primary.main",
-            }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          color: "primary.main",
+        }}
+      >
         Register
       </Typography>
       <TextField
@@ -59,7 +68,7 @@ export default function RegisterForm(): React.ReactElement {
         }}
       />
       <TextField
-        label="Email"
+        label="Noroff Email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -82,19 +91,26 @@ export default function RegisterForm(): React.ReactElement {
       />
       {isError && (
         <Typography color="error" variant="body2">
-          Failed to register. Please check your details and try again.
+          {registerError}
         </Typography>
       )}
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         fullWidth
         disabled={isLoading}
+        sx={{
+          backgroundColor: "secondary.main",
+          color: "white",
+        }}
       >
         {isLoading ? "Registering..." : "Register"}
       </Button>
-      <Button component={Link} to="/login" sx={{ color: "primary.main" }}>
+      <Button
+        component={Link}
+        to="/login"
+        sx={{ color: "secondary.main", textDecoration: "underline" }}
+      >
         Already have an account? Sign in
       </Button>
     </Box>

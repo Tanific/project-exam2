@@ -82,6 +82,10 @@ a {
     }
   }
 
+  .react-aria-CalendarCell[data-unavailable][data-disabled] {
+    color: var(--text-color-unavailable);
+  }
+
   .react-aria-CalendarCell {
     width: 2.2rem;
     line-height: 2.4rem;

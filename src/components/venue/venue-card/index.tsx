@@ -7,12 +7,20 @@ import {
   Rating,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import VenuePlaceholder from '../../../assets/VenuePlaceholder.svg'
+import VenuePlaceholder from "../../../assets/VenuePlaceholder.svg";
 import { VenueCardProps } from "../../../types/venue";
 import { Link } from "react-router-dom";
 
 export default function VenueCard(props: VenueCardProps): React.ReactElement {
-  const { id, name, media, price, location, rating, cardHeadingLevel = 5 } = props;
+  const {
+    id,
+    name,
+    media,
+    price,
+    location,
+    rating,
+    cardHeadingLevel = 5,
+  } = props;
   const imageUrl = media?.[0]?.url ?? VenuePlaceholder;
 
   return (
@@ -34,13 +42,14 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
         component="img"
         image={imageUrl}
         alt={name}
-        sx={{ height: 200, 
-          width: "100%",
-          objectFit: "cover", 
-         }}
+        sx={{ height: 200, width: "100%", objectFit: "cover" }}
       />
       <CardContent sx={{ flex: 1 }}>
-        <Typography noWrap variant={`h${cardHeadingLevel}`} component={`h${cardHeadingLevel}`}>
+        <Typography
+          noWrap
+          variant={`h${cardHeadingLevel}`}
+          component={`h${cardHeadingLevel}`}
+        >
           {name}
         </Typography>
         <Typography
@@ -58,7 +67,9 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
               fontSize: { xs: "20px" },
             }}
           />
-          {location ? `${location.city}, ${location.country}` : "Location unavailable"}
+          {location && location.city?.trim() && location.country?.trim()
+            ? `${location.city}, ${location.country}`
+            : "No location specified"}
         </Typography>
       </CardContent>
       <CardContent
@@ -71,31 +82,30 @@ export default function VenueCard(props: VenueCardProps): React.ReactElement {
         }}
       >
         <Rating value={rating} readOnly sx={{ color: "secondary.main" }} />
-          <Typography
-            color="primary.dark"
-            sx={{
-              fontWeight: "bold",
-              fontSize: { xs: "1.3rem" },
-              padding: 0,
-              letterSpacing: "-1%",
-              marginTop: 1,
-            }}
-          >
-            kr {price}
-          </Typography>
-          <Typography
-            color="secondary.dark"
-            sx={{
-              fontSize: { xs: "1rem" },
-              padding: 0,
-              letterSpacing: "3%",
-              fontWeight: "light",
-              marginLeft: 1,
-              marginTop: 1,
-            }}
-          >
-            /night
-          </Typography>
+        <Typography
+          color="primary.dark"
+          sx={{
+            fontWeight: "bold",
+            fontSize: { xs: "1.3rem" },
+            padding: 0,
+            letterSpacing: "-1%",
+            marginTop: 1,
+          }}
+        >
+          kr {price}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: { xs: "1rem" },
+            padding: 0,
+            letterSpacing: "3%",
+            fontWeight: "light",
+            marginLeft: 1,
+            marginTop: 1,
+          }}
+        >
+          /night
+        </Typography>
       </CardContent>
     </Card>
   );

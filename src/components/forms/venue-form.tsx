@@ -32,6 +32,7 @@ interface UpdateVenueFormProps {
 }
 export type VenueFormProps = CreateVenueFormProps | UpdateVenueFormProps;
 
+
 export default function VenueForm({
   onSubmit,
   initialValues,
@@ -42,6 +43,7 @@ export default function VenueForm({
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<CreateVenue>({
     defaultValues: initialValues || {
@@ -58,13 +60,8 @@ export default function VenueForm({
         pets: false,
       },
       location: {
-        address: "",
         city: "",
-        zip: "",
         country: "",
-        continent: "",
-        lat: 0,
-        lng: 0,
       },
     },
   });
@@ -79,16 +76,14 @@ export default function VenueForm({
       reset(initialValues);
     }
   }, [initialValues, reset]);
-
   return (
     <Box
-      maxWidth="md"
-      sx={{ mt: 4, backgroundColor: "background.paper", p: 4 }}
+      maxWidth={650}
+      sx={{ mt: 4, mb: 5, backgroundColor: "background.paper", p: 4 }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
         {mode === "create" ? "Create Venue" : "Edit Venue"}
       </Typography>
-
       <Box
         component="form"
         onSubmit={handleSubmit(
@@ -96,7 +91,6 @@ export default function VenueForm({
         )}
         sx={{ display: "flex", flexDirection: "column", gap: 3 }}
       >
-        {/* Venue Name */}
         <Controller
           name="name"
           control={control}
@@ -104,15 +98,13 @@ export default function VenueForm({
           render={({ field }) => (
             <TextField
               {...field}
-              label="Name*"
               error={!!errors.name}
               helperText={errors.name?.message}
+              label="Name*"
               fullWidth
             />
           )}
         />
-
-        {/* Description */}
         <Controller
           name="description"
           control={control}
@@ -122,15 +114,13 @@ export default function VenueForm({
               {...field}
               label="Description*"
               multiline
-              rows={4}
               error={!!errors.description}
               helperText={errors.description?.message}
+              rows={4}
               fullWidth
             />
           )}
         />
-
-        {/* Price and Max Guests */}
         <Box
           sx={{
             display: "flex",
@@ -144,6 +134,7 @@ export default function VenueForm({
             rules={{
               required: "Price is required",
               min: { value: 0, message: "Price cannot be negative" },
+              max: { value: 10000, message: "Price cant be greater than 10,000" },
             }}
             render={({ field }) => (
               <TextField
@@ -172,6 +163,7 @@ export default function VenueForm({
                 {...field}
                 label="Max Guests*"
                 type="number"
+                slotProps={{ htmlInput: { min: 1, max: 100 } }}
                 error={!!errors.maxGuests}
                 helperText={errors.maxGuests?.message}
                 fullWidth
@@ -183,8 +175,6 @@ export default function VenueForm({
             )}
           />
         </Box>
-
-        {/* Rating */}
         <Controller
           name="rating"
           control={control}
@@ -203,8 +193,6 @@ export default function VenueForm({
             />
           )}
         />
-
-        {/* Media Section */}
         <Typography variant="h6">Media</Typography>
         {fields.map((item, index) => (
           <Box
@@ -219,11 +207,11 @@ export default function VenueForm({
             <Controller
               name={`media.${index}.url`}
               control={control}
-              rules={{ required: "Media URL is required" }}
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="URL"
+                  label="Image URL"
+                  type="url"
                   error={!!errors.media?.[index]?.url}
                   helperText={errors.media?.[index]?.url?.message}
                   fullWidth
@@ -237,8 +225,7 @@ export default function VenueForm({
                 <TextField
                   {...field}
                   label="Alt Text"
-                  error={!!errors.media?.[index]?.alt}
-                  helperText={errors.media?.[index]?.alt?.message}
+
                   fullWidth
                 />
               )}
@@ -255,8 +242,6 @@ export default function VenueForm({
         <Button variant="outlined" onClick={() => append({ url: "", alt: "" })}>
           Add Media
         </Button>
-
-        {/* Amenities */}
         <Typography variant="h6">Amenities</Typography>
         <Box
           sx={{
@@ -330,8 +315,6 @@ export default function VenueForm({
             )}
           />
         </Box>
-
-        {/* Location */}
         <Typography variant="h6">Location</Typography>
         <Box
           sx={{
@@ -340,50 +323,20 @@ export default function VenueForm({
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
-          <Controller
-            name="location.address"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Address"
-                fullWidth
-                placeholder="123 Main St"
-              />
-            )}
-          />
-          <Controller
-            name="location.city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="City"
-                fullWidth
-                placeholder="City Name"
-              />
-            )}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            flexDirection: { xs: "column", sm: "row" },
-          }}
-        >
-          <Controller
-            name="location.zip"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="ZIP"
-                fullWidth
-                placeholder="ZIP Code"
-              />
-            )}
-          />
+          <Box>
+            <Controller
+              name="location.city"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="City"
+                  fullWidth
+                  placeholder="City Name"
+                />
+              )}
+            />
+          </Box>
           <Controller
             name="location.country"
             control={control}
@@ -396,60 +349,14 @@ export default function VenueForm({
               />
             )}
           />
-          <Controller
-            name="location.continent"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Continent"
-                fullWidth
-                placeholder="Continent Name"
-              />
-            )}
-          />
-          <Controller
-            name="location.lat"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Latitude"
-                type="number"
-                fullWidth
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value === "" ? "" : Number(value));
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="location.lng"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Longitude"
-                type="number"
-                fullWidth
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value === "" ? "" : Number(value));
-                }}
-              />
-            )}
-          />
         </Box>
-
-        {/* Submit Button */}
         <Button
           type="submit"
           variant="contained"
           disabled={isLoading}
           sx={{
-            alignSelf: "flex-start",
-            backgroundColor: "#42B34E",
+            alignSelf: "center",
+            backgroundColor: "secondary.detail",
             color: "black",
             mt: 2,
           }}
