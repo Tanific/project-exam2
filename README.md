@@ -35,9 +35,18 @@ There are two aspects to this brief: the customer-facing side of the website whe
 - [Material UI](https://mui.com/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [React Aria Components](https://react-spectrum.adobe.com/react-aria/react-aria-components.html) for the venue booking calendar
-  
-### Getting started started
+
+## Getting started started
 1. Clone the repository: `git clone https://github.com/Tanific/project-exam2.git`
 2. `npm install` inside the project folder to install dependencies
 3. `npm start` to start the server
 
+## Deployment
+Site is hosted on [Netlify](https://netlify.com/).
+The site can be found at https://pe2-tonjestensen.netlify.app/
+
+## Contributing
+This is a school project, I will not be accepting contributions
+
+## Contact
+[LinkedIn](https://www.linkedin.com/in/tonje-stensen)
