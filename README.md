@@ -29,7 +29,7 @@ There are two aspects to this brief: the customer-facing side of the website whe
 14. A registered user may update their avatar
 15. A registered user may logout
 
-### Technology stack
+## Technology stack
 - [TypeScript](https://www.typescriptlang.org/)
 - [React](https://reactjs.org/)
 - [Material UI](https://mui.com/)
